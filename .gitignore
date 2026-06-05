@@ -1,0 +1,17 @@
+.env
+*.env
+token.json
+credentials.json
+__pycache__/
+*.pyc
+.venv/
+
+# Private or raw institutional data must not be committed.
+data/private/
+data/raw/
+data/calibration/
+reports/private/
+
+# Generated local-only scratch outputs.
+tmp/
+scratch/

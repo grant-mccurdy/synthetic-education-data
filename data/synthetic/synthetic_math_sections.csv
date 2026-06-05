@@ -1,0 +1,26 @@
+school_year,section_id,course_id,section_label,teacher_id,teacher_label,period_label,target_enrollment,max_capacity,class_size_band,section_growth_effect,teacher_growth_effect
+2025-2026,SEC-001,MATH-ALG1,Algebra 1 - Synthetic Section 01,TCH-001,Teacher 01,Period 1,11,12,small,-0.3,-0.25
+2025-2026,SEC-002,MATH-ALG1,Algebra 1 - Synthetic Section 02,TCH-001,Teacher 01,Period 2,10,12,small,-0.2,-0.25
+2025-2026,SEC-003,MATH-GEOM,Geometry - Synthetic Section 03,TCH-001,Teacher 01,Period 3,12,12,small,-0.1,-0.25
+2025-2026,SEC-004,MATH-GEOM,Geometry - Synthetic Section 04,TCH-001,Teacher 01,Period 4,12,12,small,0.0,-0.25
+2025-2026,SEC-005,MATH-GEOM,Geometry - Synthetic Section 05,TCH-001,Teacher 01,Period 5,12,12,small,0.1,-0.25
+2025-2026,SEC-006,MATH-GEOM,Geometry - Synthetic Section 06,TCH-002,Teacher 02,Period 6,12,12,small,0.2,0.1
+2025-2026,SEC-007,MATH-GEOM,Geometry - Synthetic Section 07,TCH-002,Teacher 02,Period 1,12,12,small,0.3,0.1
+2025-2026,SEC-008,MATH-GEOM,Geometry - Synthetic Section 08,TCH-002,Teacher 02,Period 2,11,12,small,-0.3,0.1
+2025-2026,SEC-009,MATH-ALG2,Algebra 2 - Synthetic Section 09,TCH-002,Teacher 02,Period 3,18,18,standard,-0.2,0.1
+2025-2026,SEC-010,MATH-ALG2,Algebra 2 - Synthetic Section 10,TCH-002,Teacher 02,Period 4,17,18,standard,-0.1,0.1
+2025-2026,SEC-011,MATH-ALG2-H,Honors Algebra 2 - Synthetic Section 11,TCH-003,Teacher 03,Period 5,11,12,small,0.0,0.2
+2025-2026,SEC-012,MATH-ALG2-H,Honors Algebra 2 - Synthetic Section 12,TCH-003,Teacher 03,Period 6,11,12,small,0.1,0.2
+2025-2026,SEC-013,MATH-ALG2-H,Honors Algebra 2 - Synthetic Section 13,TCH-003,Teacher 03,Period 1,11,12,small,0.2,0.2
+2025-2026,SEC-014,MATH-ALG2-H,Honors Algebra 2 - Synthetic Section 14,TCH-003,Teacher 03,Period 2,10,12,small,0.3,0.2
+2025-2026,SEC-015,MATH-PRECALC,Precalculus - Synthetic Section 15,TCH-003,Teacher 03,Period 3,8,12,small,-0.3,0.2
+2025-2026,SEC-016,MATH-PRECALC,Precalculus - Synthetic Section 16,TCH-004,Teacher 04,Period 4,8,12,small,-0.2,-0.1
+2025-2026,SEC-017,MATH-AP-PRECALC,AP Precalculus - Synthetic Section 17,TCH-004,Teacher 04,Period 5,10,12,small,-0.1,-0.1
+2025-2026,SEC-018,MATH-AP-PRECALC,AP Precalculus - Synthetic Section 18,TCH-004,Teacher 04,Period 6,10,12,small,0.0,-0.1
+2025-2026,SEC-019,MATH-AP-PRECALC,AP Precalculus - Synthetic Section 19,TCH-004,Teacher 04,Period 1,9,12,small,0.1,-0.1
+2025-2026,SEC-020,MATH-AP-CALC-AB,AP Calculus AB - Synthetic Section 20,TCH-004,Teacher 04,Period 2,13,18,standard,0.2,-0.1
+2025-2026,SEC-021,MATH-AP-CALC-AB,AP Calculus AB - Synthetic Section 21,TCH-005,Teacher 05,Period 3,12,12,small,0.3,0.05
+2025-2026,SEC-022,MATH-AP-CALC-AB,AP Calculus AB - Synthetic Section 22,TCH-005,Teacher 05,Period 4,12,12,small,-0.3,0.05
+2025-2026,SEC-023,MATH-AP-CALC-AB,AP Calculus AB - Synthetic Section 23,TCH-005,Teacher 05,Period 5,12,12,small,-0.2,0.05
+2025-2026,SEC-024,MATH-AP-CALC-BC,AP Calculus BC - Synthetic Section 24,TCH-005,Teacher 05,Period 6,12,12,small,-0.1,0.05
+2025-2026,SEC-025,MATH-AP-CALC-BC,AP Calculus BC - Synthetic Section 25,TCH-005,Teacher 05,Period 1,11,12,small,0.0,0.05
