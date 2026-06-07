@@ -1,4 +1,4 @@
-# Synthetic Math Department
+# Synthetic Education Data
 
 A privacy-preserving synthetic education data engine that simulates a high-school math department for assessment analytics, dashboard development, and learning-systems prototyping.
 
@@ -106,7 +106,7 @@ This repository is the synthetic data foundation.
 The downstream `assessment-intelligence` project is responsible for the visual analytics and reporting layer: dashboards, distribution checks, growth diagnostics, decision-support reports, and leadership-facing interpretation.
 
 ```text
-synthetic-math-department -> data generation and validation
+synthetic-education-data -> data generation and validation
 assessment-intelligence -> analytics, dashboards, diagnostics, and reporting
 ```
 

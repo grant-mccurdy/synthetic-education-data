@@ -79,6 +79,6 @@ The JSON profiles should be downstream renderings of the canonical state, not se
 The `assessment-intelligence` project should consume the generated artifacts and perform the analysis/reporting work:
 
 ```text
-synthetic-math-department -> generates public-safe environment and data
+synthetic-education-data -> generates public-safe environment and data
 assessment-intelligence -> analyzes, reports, and dashboards the data
 ```
