@@ -1,0 +1,63 @@
+school_year,course_id,canvas_course_id,course_name,source_system,profile_path,canonical_enrollment_count,canvas_enrollment_count,canonical_section_count,canvas_section_count,canonical_teacher_count,canvas_teacher_count,audit_status
+2025-2026,MATH-AP-CALC-BC,SYN-CANVAS-MATH-AP-CALC-BC-2025-2026,AP Calculus BC,synthetic_canvas,data/synthetic/canvas_course_profiles/2025-2026/MATH-AP-CALC-BC.json,23,23,2,2,1,1,matched
+2026-2027,MATH-GEOM,SYN-CANVAS-MATH-GEOM-2026-2027,Geometry,synthetic_canvas,data/synthetic/canvas_course_profiles/2026-2027/MATH-GEOM.json,53,53,4,4,2,2,matched
+2027-2028,MATH-ALG2,SYN-CANVAS-MATH-ALG2-2027-2028,Algebra 2,synthetic_canvas,data/synthetic/canvas_course_profiles/2027-2028/MATH-ALG2.json,39,39,3,3,1,1,matched
+2028-2029,MATH-ALG2,SYN-CANVAS-MATH-ALG2-2028-2029,Algebra 2,synthetic_canvas,data/synthetic/canvas_course_profiles/2028-2029/MATH-ALG2.json,34,34,3,3,1,1,matched
+2028-2029,MATH-GEOM,SYN-CANVAS-MATH-GEOM-2028-2029,Geometry,synthetic_canvas,data/synthetic/canvas_course_profiles/2028-2029/MATH-GEOM.json,55,55,4,4,2,2,matched
+2025-2026,MATH-ALG2-H,SYN-CANVAS-MATH-ALG2-H-2025-2026,Honors Algebra 2,synthetic_canvas,data/synthetic/canvas_course_profiles/2025-2026/MATH-ALG2-H.json,43,43,4,4,1,1,matched
+2026-2027,MATH-PRECALC,SYN-CANVAS-MATH-PRECALC-2026-2027,Precalculus,synthetic_canvas,data/synthetic/canvas_course_profiles/2026-2027/MATH-PRECALC.json,35,35,3,3,2,2,matched
+2027-2028,MATH-ALG1,SYN-CANVAS-MATH-ALG1-2027-2028,Algebra 1,synthetic_canvas,data/synthetic/canvas_course_profiles/2027-2028/MATH-ALG1.json,13,13,1,1,1,1,matched
+2027-2028,MATH-AP-CALC-BC,SYN-CANVAS-MATH-AP-CALC-BC-2027-2028,AP Calculus BC,synthetic_canvas,data/synthetic/canvas_course_profiles/2027-2028/MATH-AP-CALC-BC.json,16,16,2,2,1,1,matched
+2027-2028,MATH-AP-PRECALC,SYN-CANVAS-MATH-AP-PRECALC-2027-2028,AP Precalculus,synthetic_canvas,data/synthetic/canvas_course_profiles/2027-2028/MATH-AP-PRECALC.json,40,40,3,3,1,1,matched
+2028-2029,MATH-AP-CALC-AB,SYN-CANVAS-MATH-AP-CALC-AB-2028-2029,AP Calculus AB,synthetic_canvas,data/synthetic/canvas_course_profiles/2028-2029/MATH-AP-CALC-AB.json,54,54,4,4,1,1,matched
+2029-2030,MATH-AP-PRECALC,SYN-CANVAS-MATH-AP-PRECALC-2029-2030,AP Precalculus,synthetic_canvas,data/synthetic/canvas_course_profiles/2029-2030/MATH-AP-PRECALC.json,32,32,3,3,1,1,matched
+2030-2031,MATH-ALG1,SYN-CANVAS-MATH-ALG1-2030-2031,Algebra 1,synthetic_canvas,data/synthetic/canvas_course_profiles/2030-2031/MATH-ALG1.json,13,13,1,1,1,1,matched
+2030-2031,MATH-AP-CALC-BC,SYN-CANVAS-MATH-AP-CALC-BC-2030-2031,AP Calculus BC,synthetic_canvas,data/synthetic/canvas_course_profiles/2030-2031/MATH-AP-CALC-BC.json,21,21,2,2,1,1,matched
+2031-2032,MATH-ALG2,SYN-CANVAS-MATH-ALG2-2031-2032,Algebra 2,synthetic_canvas,data/synthetic/canvas_course_profiles/2031-2032/MATH-ALG2.json,36,36,3,3,1,1,matched
+2031-2032,MATH-PRECALC,SYN-CANVAS-MATH-PRECALC-2031-2032,Precalculus,synthetic_canvas,data/synthetic/canvas_course_profiles/2031-2032/MATH-PRECALC.json,45,45,4,4,2,2,matched
+2025-2026,MATH-ALG1,SYN-CANVAS-MATH-ALG1-2025-2026,Algebra 1,synthetic_canvas,data/synthetic/canvas_course_profiles/2025-2026/MATH-ALG1.json,21,21,2,2,1,1,matched
+2025-2026,MATH-AP-PRECALC,SYN-CANVAS-MATH-AP-PRECALC-2025-2026,AP Precalculus,synthetic_canvas,data/synthetic/canvas_course_profiles/2025-2026/MATH-AP-PRECALC.json,29,29,3,3,1,1,matched
+2027-2028,MATH-AP-CALC-AB,SYN-CANVAS-MATH-AP-CALC-AB-2027-2028,AP Calculus AB,synthetic_canvas,data/synthetic/canvas_course_profiles/2027-2028/MATH-AP-CALC-AB.json,58,58,5,5,2,2,matched
+2027-2028,MATH-GEOM,SYN-CANVAS-MATH-GEOM-2027-2028,Geometry,synthetic_canvas,data/synthetic/canvas_course_profiles/2027-2028/MATH-GEOM.json,48,48,4,4,2,2,matched
+2028-2029,MATH-ALG2-H,SYN-CANVAS-MATH-ALG2-H-2028-2029,Honors Algebra 2,synthetic_canvas,data/synthetic/canvas_course_profiles/2028-2029/MATH-ALG2-H.json,29,29,3,3,1,1,matched
+2029-2030,MATH-ALG2-H,SYN-CANVAS-MATH-ALG2-H-2029-2030,Honors Algebra 2,synthetic_canvas,data/synthetic/canvas_course_profiles/2029-2030/MATH-ALG2-H.json,34,34,3,3,1,1,matched
+2030-2031,MATH-ALG2,SYN-CANVAS-MATH-ALG2-2030-2031,Algebra 2,synthetic_canvas,data/synthetic/canvas_course_profiles/2030-2031/MATH-ALG2.json,45,45,4,4,1,1,matched
+2030-2031,MATH-AP-PRECALC,SYN-CANVAS-MATH-AP-PRECALC-2030-2031,AP Precalculus,synthetic_canvas,data/synthetic/canvas_course_profiles/2030-2031/MATH-AP-PRECALC.json,36,36,3,3,1,1,matched
+2031-2032,MATH-ALG1,SYN-CANVAS-MATH-ALG1-2031-2032,Algebra 1,synthetic_canvas,data/synthetic/canvas_course_profiles/2031-2032/MATH-ALG1.json,13,13,1,1,1,1,matched
+2031-2032,MATH-AP-PRECALC,SYN-CANVAS-MATH-AP-PRECALC-2031-2032,AP Precalculus,synthetic_canvas,data/synthetic/canvas_course_profiles/2031-2032/MATH-AP-PRECALC.json,34,34,3,3,1,1,matched
+2026-2027,MATH-ALG1,SYN-CANVAS-MATH-ALG1-2026-2027,Algebra 1,synthetic_canvas,data/synthetic/canvas_course_profiles/2026-2027/MATH-ALG1.json,13,13,1,1,1,1,matched
+2026-2027,MATH-AP-CALC-AB,SYN-CANVAS-MATH-AP-CALC-AB-2026-2027,AP Calculus AB,synthetic_canvas,data/synthetic/canvas_course_profiles/2026-2027/MATH-AP-CALC-AB.json,27,27,2,2,1,1,matched
+2029-2030,MATH-AP-CALC-AB,SYN-CANVAS-MATH-AP-CALC-AB-2029-2030,AP Calculus AB,synthetic_canvas,data/synthetic/canvas_course_profiles/2029-2030/MATH-AP-CALC-AB.json,43,43,4,4,1,1,matched
+2030-2031,MATH-BEYOND-CORE,SYN-CANVAS-MATH-BEYOND-CORE-2030-2031,Beyond Core Math Sequence,synthetic_canvas,data/synthetic/canvas_course_profiles/2030-2031/MATH-BEYOND-CORE.json,5,5,1,1,1,1,matched
+2031-2032,MATH-ALG2-H,SYN-CANVAS-MATH-ALG2-H-2031-2032,Honors Algebra 2,synthetic_canvas,data/synthetic/canvas_course_profiles/2031-2032/MATH-ALG2-H.json,28,28,2,2,1,1,matched
+2031-2032,MATH-AP-CALC-AB,SYN-CANVAS-MATH-AP-CALC-AB-2031-2032,AP Calculus AB,synthetic_canvas,data/synthetic/canvas_course_profiles/2031-2032/MATH-AP-CALC-AB.json,55,55,4,4,1,1,matched
+2031-2032,MATH-AP-CALC-BC,SYN-CANVAS-MATH-AP-CALC-BC-2031-2032,AP Calculus BC,synthetic_canvas,data/synthetic/canvas_course_profiles/2031-2032/MATH-AP-CALC-BC.json,24,24,2,2,1,1,matched
+2025-2026,MATH-GEOM,SYN-CANVAS-MATH-GEOM-2025-2026,Geometry,synthetic_canvas,data/synthetic/canvas_course_profiles/2025-2026/MATH-GEOM.json,71,71,6,6,2,2,matched
+2026-2027,MATH-ALG2-H,SYN-CANVAS-MATH-ALG2-H-2026-2027,Honors Algebra 2,synthetic_canvas,data/synthetic/canvas_course_profiles/2026-2027/MATH-ALG2-H.json,40,40,3,3,1,1,matched
+2026-2027,MATH-ALG2,SYN-CANVAS-MATH-ALG2-2026-2027,Algebra 2,synthetic_canvas,data/synthetic/canvas_course_profiles/2026-2027/MATH-ALG2.json,43,43,4,4,1,1,matched
+2027-2028,MATH-ALG2-H,SYN-CANVAS-MATH-ALG2-H-2027-2028,Honors Algebra 2,synthetic_canvas,data/synthetic/canvas_course_profiles/2027-2028/MATH-ALG2-H.json,27,27,2,2,1,1,matched
+2027-2028,MATH-BEYOND-CORE,SYN-CANVAS-MATH-BEYOND-CORE-2027-2028,Beyond Core Math Sequence,synthetic_canvas,data/synthetic/canvas_course_profiles/2027-2028/MATH-BEYOND-CORE.json,6,6,1,1,1,1,matched
+2028-2029,MATH-ALG1,SYN-CANVAS-MATH-ALG1-2028-2029,Algebra 1,synthetic_canvas,data/synthetic/canvas_course_profiles/2028-2029/MATH-ALG1.json,16,16,2,2,1,1,matched
+2028-2029,MATH-AP-CALC-BC,SYN-CANVAS-MATH-AP-CALC-BC-2028-2029,AP Calculus BC,synthetic_canvas,data/synthetic/canvas_course_profiles/2028-2029/MATH-AP-CALC-BC.json,26,26,2,2,1,1,matched
+2028-2029,MATH-AP-PRECALC,SYN-CANVAS-MATH-AP-PRECALC-2028-2029,AP Precalculus,synthetic_canvas,data/synthetic/canvas_course_profiles/2028-2029/MATH-AP-PRECALC.json,29,29,3,3,1,1,matched
+2029-2030,MATH-BEYOND-CORE,SYN-CANVAS-MATH-BEYOND-CORE-2029-2030,Beyond Core Math Sequence,synthetic_canvas,data/synthetic/canvas_course_profiles/2029-2030/MATH-BEYOND-CORE.json,4,4,1,1,1,1,matched
+2025-2026,MATH-AP-CALC-AB,SYN-CANVAS-MATH-AP-CALC-AB-2025-2026,AP Calculus AB,synthetic_canvas,data/synthetic/canvas_course_profiles/2025-2026/MATH-AP-CALC-AB.json,49,49,4,4,1,1,matched
+2026-2027,MATH-AP-CALC-BC,SYN-CANVAS-MATH-AP-CALC-BC-2026-2027,AP Calculus BC,synthetic_canvas,data/synthetic/canvas_course_profiles/2026-2027/MATH-AP-CALC-BC.json,27,27,2,2,1,1,matched
+2028-2029,MATH-BEYOND-CORE,SYN-CANVAS-MATH-BEYOND-CORE-2028-2029,Beyond Core Math Sequence,synthetic_canvas,data/synthetic/canvas_course_profiles/2028-2029/MATH-BEYOND-CORE.json,6,6,1,1,1,1,matched
+2029-2030,MATH-ALG2,SYN-CANVAS-MATH-ALG2-2029-2030,Algebra 2,synthetic_canvas,data/synthetic/canvas_course_profiles/2029-2030/MATH-ALG2.json,39,39,3,3,1,1,matched
+2029-2030,MATH-PRECALC,SYN-CANVAS-MATH-PRECALC-2029-2030,Precalculus,synthetic_canvas,data/synthetic/canvas_course_profiles/2029-2030/MATH-PRECALC.json,34,34,3,3,2,2,matched
+2030-2031,MATH-PRECALC,SYN-CANVAS-MATH-PRECALC-2030-2031,Precalculus,synthetic_canvas,data/synthetic/canvas_course_profiles/2030-2031/MATH-PRECALC.json,39,39,3,3,2,2,matched
+2025-2026,MATH-PRECALC,SYN-CANVAS-MATH-PRECALC-2025-2026,Precalculus,synthetic_canvas,data/synthetic/canvas_course_profiles/2025-2026/MATH-PRECALC.json,16,16,2,2,1,1,matched
+2027-2028,MATH-PRECALC,SYN-CANVAS-MATH-PRECALC-2027-2028,Precalculus,synthetic_canvas,data/synthetic/canvas_course_profiles/2027-2028/MATH-PRECALC.json,40,40,3,3,2,2,matched
+2028-2029,MATH-PRECALC,SYN-CANVAS-MATH-PRECALC-2028-2029,Precalculus,synthetic_canvas,data/synthetic/canvas_course_profiles/2028-2029/MATH-PRECALC.json,38,38,3,3,2,2,matched
+2029-2030,MATH-AP-CALC-BC,SYN-CANVAS-MATH-AP-CALC-BC-2029-2030,AP Calculus BC,synthetic_canvas,data/synthetic/canvas_course_profiles/2029-2030/MATH-AP-CALC-BC.json,17,17,2,2,1,1,matched
+2030-2031,MATH-ALG2-H,SYN-CANVAS-MATH-ALG2-H-2030-2031,Honors Algebra 2,synthetic_canvas,data/synthetic/canvas_course_profiles/2030-2031/MATH-ALG2-H.json,32,32,3,3,1,1,matched
+2030-2031,MATH-AP-CALC-AB,SYN-CANVAS-MATH-AP-CALC-AB-2030-2031,AP Calculus AB,synthetic_canvas,data/synthetic/canvas_course_profiles/2030-2031/MATH-AP-CALC-AB.json,45,45,4,4,1,1,matched
+2030-2031,MATH-GEOM,SYN-CANVAS-MATH-GEOM-2030-2031,Geometry,synthetic_canvas,data/synthetic/canvas_course_profiles/2030-2031/MATH-GEOM.json,51,51,4,4,2,2,matched
+2031-2032,MATH-BEYOND-CORE,SYN-CANVAS-MATH-BEYOND-CORE-2031-2032,Beyond Core Math Sequence,synthetic_canvas,data/synthetic/canvas_course_profiles/2031-2032/MATH-BEYOND-CORE.json,4,4,1,1,1,1,matched
+2025-2026,MATH-ALG2,SYN-CANVAS-MATH-ALG2-2025-2026,Algebra 2,synthetic_canvas,data/synthetic/canvas_course_profiles/2025-2026/MATH-ALG2.json,35,35,3,3,2,2,matched
+2026-2027,MATH-AP-PRECALC,SYN-CANVAS-MATH-AP-PRECALC-2026-2027,AP Precalculus,synthetic_canvas,data/synthetic/canvas_course_profiles/2026-2027/MATH-AP-PRECALC.json,45,45,4,4,1,1,matched
+2026-2027,MATH-BEYOND-CORE,SYN-CANVAS-MATH-BEYOND-CORE-2026-2027,Beyond Core Math Sequence,synthetic_canvas,data/synthetic/canvas_course_profiles/2026-2027/MATH-BEYOND-CORE.json,4,4,1,1,1,1,matched
+2029-2030,MATH-ALG1,SYN-CANVAS-MATH-ALG1-2029-2030,Algebra 1,synthetic_canvas,data/synthetic/canvas_course_profiles/2029-2030/MATH-ALG1.json,19,19,2,2,1,1,matched
+2029-2030,MATH-GEOM,SYN-CANVAS-MATH-GEOM-2029-2030,Geometry,synthetic_canvas,data/synthetic/canvas_course_profiles/2029-2030/MATH-GEOM.json,65,65,5,5,2,2,matched
+2031-2032,MATH-GEOM,SYN-CANVAS-MATH-GEOM-2031-2032,Geometry,synthetic_canvas,data/synthetic/canvas_course_profiles/2031-2032/MATH-GEOM.json,48,48,4,4,2,2,matched

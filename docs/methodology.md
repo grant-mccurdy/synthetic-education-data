@@ -2,53 +2,35 @@
 
 ## Purpose
 
-This project generates a public-safe synthetic math department environment. The output is intended to behave like a plausible math department data system without exposing real students, real course rosters, real LMS exports, or private institutional records.
+This project generates a public-safe synthetic math department environment. The output is designed to behave like a plausible assessment and LMS data system without exposing real students, real course rosters, real LMS exports, private teacher names, internal section labels, or school-private records.
 
-The generator is designed around one canonical state object:
+The generator is organized around one canonical state object:
 
 ```text
 data/synthetic/synthetic_school_state.json
 ```
 
-CSV outputs are rendered from that state rather than generated as unrelated files.
+CSV and JSON artifacts are rendered from that state rather than generated as unrelated files.
 
-Canvas-style course profile JSON files are also rendered from that state:
+## Simulation Horizon
 
-```text
-data/synthetic/canvas_course_profiles/
-```
-
-## Baseline Environment
-
-The current baseline simulates one school year:
+The current simulation covers seven academic years:
 
 ```text
-2025-2026
+2025-2026 through 2031-2032
 ```
 
-The current environment includes:
+The model preserves a compact small-school math department scale:
 
-- 287 synthetic students
-- 5 synthetic teachers
+- 287 active students per year
+- 696 all-ever synthetic students across the full horizon
+- 2,009 active student-year enrollments
+- 5 synthetic teachers per school year
 - 9 course entries
-- 25 sections
-- one active math enrollment per student
-- 8 current-year Canvas-style course JSON profiles
-- 14 all-school math assessment assignment fields
+- 174 sections across the full horizon
+- 14 standardized assessment windows
 
-The baseline is intentionally a compact math department rather than a full-school simulation.
-
-## Downstream Analysis Use
-
-The current dataset is ready for one-academic-year analysis. It includes a beginning-of-year assessment, an end-of-year assessment, one active math enrollment per student, synthetic teacher/section context, course/track placement, and Canvas-style course profile JSONs.
-
-The downstream analysis project can use this dataset to model:
-
-- BOY-to-EOY growth
-- score distributions by grade, course, track, teacher, and section
-- attendance/non-participation effects
-- Canvas gradebook joins to course profile JSONs
-- public-safe reporting and dashboard workflows
+The churn model graduates seniors after each year and admits a replacement freshman cohort for the next year. This keeps the active department size stable while allowing realistic longitudinal entry and exit.
 
 ## Course Catalog
 
@@ -66,22 +48,55 @@ The course catalog focuses on the core high-school math sequence:
 | `MATH-AP-CALC-BC` | AP Calculus BC | ap |
 | `MATH-BEYOND-CORE` | Beyond Core Math Sequence | beyond_core |
 
-Geometry has no honors equivalent in the baseline. Honors/AP differentiation begins after Geometry. Statistics courses are excluded from the baseline.
+Geometry has no honors equivalent. Honors/AP differentiation begins after Geometry. Statistics courses are excluded from the baseline model. Students who complete AP Calculus BC before graduation may move into `MATH-BEYOND-CORE`.
 
-## Assignment 01 Score Generation
+## Student Churn And Placement
 
-`Assignment 01` models a beginning-of-year all-school math assessment.
+At the end of each academic year:
 
-The generator separates two processes:
+- grade 12 students graduate and become inactive
+- grades 9-11 promote to the next grade
+- a new grade 9 cohort is admitted
+- freshman intake equals the prior year senior count
+
+Course progression uses the prior course, current grade, and available readiness evidence:
+
+```text
+Algebra 1 -> Geometry
+Geometry -> Algebra 2 or Honors Algebra 2
+Algebra 2 -> Precalculus
+Honors Algebra 2 -> AP Precalculus
+Precalculus/AP Precalculus -> AP Calculus AB or AP Calculus BC
+AP Calculus AB -> AP Calculus BC
+AP Calculus BC -> Beyond Core Math Sequence
+```
+
+Teacher assignment favors stable subject-area ownership and target loads of five sections per teacher, with six sections allowed only when section counts require it.
+
+## Assessment Score Generation
+
+Assignments 01-14 represent standardized all-school math assessment windows:
+
+| Assignments | School year | Windows |
+| --- | --- | --- |
+| `Assignment 01-02` | 2025-2026 | beginning/end |
+| `Assignment 03-04` | 2026-2027 | beginning/end |
+| `Assignment 05-06` | 2027-2028 | beginning/end |
+| `Assignment 07-08` | 2028-2029 | beginning/end |
+| `Assignment 09-10` | 2029-2030 | beginning/end |
+| `Assignment 11-12` | 2030-2031 | beginning/end |
+| `Assignment 13-14` | 2031-2032 | beginning/end |
+
+The model separates two processes:
 
 ```text
 present-student academic score
 attendance / non-participation outcome
 ```
 
-The present-student academic score is drawn from grade-specific public-safe calibration anchors. These anchors are generalized distribution parameters, not raw private scores.
+Present-student beginning scores are drawn from grade-specific public-safe calibration anchors. These anchors are generalized distribution parameters, not raw private scores.
 
-Then the generator draws attendance status:
+Attendance is drawn independently from academic score:
 
 | Attendance category | Student share | Distribution |
 | --- | ---: | --- |
@@ -89,117 +104,110 @@ Then the generator draws attendance status:
 | `normal` | 50% | `Beta(92, 8)` |
 | `at_risk` | 10% | `Beta(70, 30)` |
 
-If the student is present, the observed `Assignment 01` score is the synthetic academic score. If the student is absent, the observed score is `0`.
+If a student is absent, the observed score is `0` and observed posterior readiness is not updated. If a student is present, the observed score is constrained to be greater than zero.
 
-Under this model, a zero on Assignment 01 means non-participation. It is not academic evidence.
+## Longitudinal Score Engine
 
-## Reusable Longitudinal Score Engine
-
-The longitudinal model is implemented as a reusable next-assessment score engine. `Assignment 02` is the first application because it is the next assessment window, not because the model is specific to Assignment 02.
-
-Conceptual contract:
+The reusable score engine has this conceptual contract:
 
 ```text
 student state
-+ prior assessment history
-+ assessment context
--> observed score
--> updated academic/attendance state
++ prior assessment evidence
++ school-year/course/section/teacher context
+-> observed assessment score
+-> updated academic readiness state when present
 ```
 
-The engine separates:
+The engine includes:
+
+- hidden latent readiness that evolves at every assessment window
+- observed posterior readiness that updates only from present-score evidence
+- weak grade-level prior shift
+- course/track context
+- synthetic teacher and section effects
+- school-year growth
+- summer atrophy between end-of-year and next beginning-of-year windows
+- regression-to-the-mean behavior
+- growth noise and observation noise
+- Bayesian-style readiness updates after present scores
+
+Students without prior latent state are initialized from a grade/window score distribution when they first become active in the assessment sequence. If they are absent, their observed score is `0` and their observed posterior readiness is not updated, but their hidden latent readiness still advances through school-year growth and summer atrophy.
+
+The public gradebook contains observed scores only. The long assessment export includes additional synthetic latent-state fields for method inspection:
+
+- `latent_transition_type`
+- `latent_readiness_before`
+- `latent_readiness_after`
+- `latent_transition_delta`
+
+## Artifacts
+
+The combined longitudinal ASMA gradebook contains every synthetic student who appears at any point in the seven-year horizon:
 
 ```text
-latent readiness
-school-year growth or summer transition
-assessment observation noise
-attendance / non-participation
+data/synthetic/synthetic_asma_gradebook.csv
 ```
 
-If a student is absent, the observed score is `0` and academic readiness is not updated.
+Rows are all-ever students. Assignment cells are populated only for years when the student is actively enrolled; cells outside active years are blank.
 
-## Assignment 02-14
-
-Assignments 02-14 represent future longitudinal assessment windows:
-
-| Assignment | Intended window |
-| --- | --- |
-| `Assignment 01` | beginning of year |
-| `Assignment 02` | end of year |
-| `Assignment 03` | beginning of next year |
-| `Assignment 04` | end of next year |
-
-`Assignment 02` is populated as the first end-of-year transition. Assignments 03-14 remain blank until later transition rules are implemented and validated.
-
-The intended transition pattern is:
+Year-specific ASMA gradebooks contain only active students for that academic year:
 
 ```text
-Assignment 01 -> Assignment 02: school-year growth
-Assignment 02 -> Assignment 03: summer atrophy / retention loss
-Assignment 03 -> Assignment 04: school-year growth
-Assignment 04 -> Assignment 05: summer atrophy / retention loss
+data/synthetic/assessment_shells/2025-2026/synthetic_asma_gradebook.csv
+...
+data/synthetic/assessment_shells/2031-2032/synthetic_asma_gradebook.csv
 ```
 
-Summer atrophy is part of the same longitudinal model as a distinct transition type. It should update latent readiness between an end-of-year assessment and the next beginning-of-year assessment rather than acting as a separate score adjustment outside the model.
+The preferred SQL/reporting input is the long score export:
 
-## Assignment 02 Score Generation
+```text
+data/synthetic/synthetic_assessment_scores_long.csv
+```
 
-`Assignment 02` models an end-of-year assessment for the same school year as Assignment 01.
+Canvas-style course profile JSONs are year-scoped:
 
-The implemented transition cases are:
+```text
+data/synthetic/canvas_course_profiles/2025-2026/MATH-ALG1.json
+...
+data/synthetic/canvas_course_profiles/2031-2032/MATH-AP-CALC-BC.json
+```
 
-| Case | Generation mode | Rule |
-| --- | --- | --- |
-| Assignment 01 present, Assignment 02 present | `growth_from_assignment_01` | update readiness from Assignment 01, apply school-year growth, observe Assignment 02 |
-| Assignment 01 absent, Assignment 02 present | `first_evidence_assignment_02` | draw first academic evidence from an end-of-year grade/window distribution |
-| Assignment 02 absent | `absent_no_update` | observed score is `0`; academic readiness is unchanged |
-
-The Assignment 02 growth model includes grade-level prior shift, course/track context, synthetic instructor effect, section effect, regression-to-mean behavior, growth noise, and observation noise.
-
-The grade-level prior shift is intentionally weak. It comes from public-safe aggregate calibration diagnostics and should not dominate a student's observed present-score history.
+Each JSON profile includes course metadata, sections, fake teacher metadata, active enrolled students, synthetic email join keys, and enrollment status.
 
 ## Canonical State
 
 The state object contains:
 
-- students
+- school years
+- all-ever students
 - teachers
-- courses
+- course catalog
 - sections
-- enrollments
+- active student-year enrollments
 - assessment shell metadata
 - assignment definitions
-- assignment scores currently populated
+- long assessment score records
+- rendered artifact paths
 
 The state does not contain private calibration details, private paths, real identifiers, real emails, real teacher names, real section labels, raw source rows, or private LMS records.
-
-## Canvas Course Profiles
-
-The generator writes one Canvas-style JSON profile per current-year eligible math course. These files simulate the course-profile artifacts that downstream analysis can join to the all-school assessment gradebook.
-
-Each profile includes:
-
-- course metadata
-- synthetic Canvas course ID
-- sections for that course
-- fake teacher metadata per section
-- enrolled synthetic students
-- synthetic email join keys
-
-`MATH-BEYOND-CORE` does not receive a current-year profile because it has zero active enrollments in the baseline dataset.
 
 ## Validation
 
 The validator checks:
 
-- expected row counts
-- one active math enrollment per student
-- enrollments reference existing courses, sections, and teachers
-- public CSV fields match the current schema
-- `Assignment 01` is populated
-- `Assignment 02` is populated by the reusable score engine
-- Assignments 03-14 are blank
-- score bounds are valid
-- Assignment 02 presence/absence and academic-profile update rules are coherent
+- seven school years
+- 287 active students per year
+- senior graduation and replacement freshman intake
+- one active math enrollment per active student-year
+- grade progression from 9 through 12
+- combined and yearly gradebook schemas
+- score bounds and non-participation-zero policy
+- all 14 assessment windows populated for active student-year records
+- attendance category shares and realized present-rate ordering
+- positive average school-year growth and negative average summer atrophy
+- latent readiness exists and remains bounded for every assessment window
+- weak positive Assignment 01 grade-level score signal
+- `Beyond Core Math Sequence` follows AP Calculus BC or a prior Beyond Core enrollment
+- teacher section-load limits and section capacity bands
+- Canvas course profiles reconciled to canonical enrollments by school year
 - banned private/source strings do not appear in public artifacts
-- Canvas course profiles cover every active enrollment exactly once

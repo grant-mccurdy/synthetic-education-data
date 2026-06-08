@@ -37,7 +37,7 @@ observed score = 0
 
 Under the current model, a zero on Assignment 01 is a non-participation/admin outcome, not evidence of academic readiness.
 
-Assignment 02 is populated by the reusable longitudinal score engine as the end-of-year transition. Assignments 03-14 remain blank until later transitions are implemented and validated.
+Assignments 02-14 are now populated by the reusable longitudinal score engine across seven synthetic school years. Assignment 01 remains the beginning-of-year initialization window for the base year.
 
 ## Validation
 
@@ -51,6 +51,5 @@ The validator confirms:
 
 - Assignment 01 is populated for every synthetic student
 - score bounds are within `[0, 100]`
-- Assignment 02 is populated for every synthetic student
-- Assignments 03-14 remain blank
+- Assignments 02-14 are populated for active student-year records
 - public artifacts do not contain banned private/source strings

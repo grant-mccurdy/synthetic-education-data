@@ -2,20 +2,25 @@
 
 A privacy-preserving synthetic education data engine that simulates a high-school math department for assessment analytics, dashboard development, and learning-systems prototyping.
 
-This repository is designed to solve a practical portfolio problem: how to demonstrate education analytics infrastructure without publishing protected student data, raw LMS exports, real gradebooks, teacher names, section labels, or school-private records.
+This repository demonstrates education analytics infrastructure without publishing protected student data, raw LMS exports, real gradebooks, teacher names, section labels, or school-private records.
 
 It is not just a fake CSV generator. The project creates a coherent synthetic department system with students, teachers, courses, sections, enrollments, assessment scores, attendance/non-participation behavior, Canvas-style course artifacts, and validation checks.
 
 ## What This Project Demonstrates
 
-- Synthetic education data generation for public-safe analytics demos
+- Synthetic education data generation for public-safe analytics workflows
 - Nested education data structure: students, sections, courses, teachers, and enrollments
 - Canvas-style all-school math assessment gradebook generation
+- Synthetic Canvas API-style profile extraction into SQL tables
 - Assessment score simulation with attendance/non-participation modeled separately from academic performance
 - Course-track, teacher, section, growth, measurement-error, observation-noise, and regression-to-the-mean effects
 - Bayesian-style readiness updates for reusable longitudinal score generation
 - Grade-level calibration diagnostics for longitudinal modeling
+- Optional DuckDB analytics warehouse with SQL validation queries and dashboard-ready mart exports
+- LMS-to-SQL roster reconciliation from synthetic Canvas course profiles
+- Star-schema reporting model with student, course, section, teacher, assignment, assessment-score, and LMS-enrollment tables
 - Canonical state object generation with reproducible CSV and JSON exports
+- Seven-year synthetic student churn with graduating seniors and replacement freshman cohorts
 - Validation of counts, schema, enrollment consistency, score bounds, assignment population policy, Canvas-style profiles, and public-safety constraints
 
 ## Statistical Design
@@ -30,19 +35,23 @@ synthetic students, teachers, courses, sections, enrollments
 -> validation-ready public artifacts
 ```
 
-`Assignment 01` is a beginning-of-year assessment. Present-student scores are drawn from grade-specific public-safe calibration anchors, then attendance is modeled separately. Under this design, an observed zero means non-participation, not academic evidence.
+Assignments 01-14 represent beginning- and end-of-year standardized assessment windows across seven synthetic academic years. Present-student scores are drawn or updated through a reusable longitudinal score engine. Attendance is modeled separately, so an observed zero means non-participation, not academic evidence.
 
-`Assignment 02` is the first application of the reusable longitudinal score engine. The engine updates academic readiness from prior evidence when appropriate, applies school-year growth, adds course/track and teacher/section effects, includes regression-to-the-mean behavior, and separates growth noise from assessment observation noise.
+The engine separates hidden latent readiness from observed posterior readiness. Hidden latent readiness advances at every assessment window through school-year growth or summer atrophy, while observed posterior readiness updates only when a student is present and produces score evidence. The model also adds course/track and teacher/section effects, includes regression-to-the-mean behavior, and separates growth noise from assessment observation noise.
 
-If a student is absent for an assessment window, the observed score is `0` and academic readiness is not updated.
+If a student is absent for an assessment window, the observed score is `0` and observed posterior readiness is not updated. The hidden synthetic latent trajectory still advances, which prevents absence from freezing the student's underlying simulated academic state.
 
 ## Workflow
 
 ```text
 synthetic math department state
 -> synthetic ASMA gradebook
+-> yearly synthetic ASMA gradebooks
+-> long assessment score export
 -> synthetic course, section, and enrollment exports
 -> validation
+-> synthetic Canvas profile extraction into SQL raw tables
+-> optional DuckDB SQL warehouse and mart exports
 -> downstream assessment analysis
 ```
 
@@ -56,20 +65,32 @@ Downstream CSV artifacts are rendered from that state:
 
 ```text
 data/synthetic/synthetic_asma_gradebook.csv
+data/synthetic/synthetic_assessment_scores_long.csv
 data/synthetic/synthetic_math_courses.csv
 data/synthetic/synthetic_math_sections.csv
 data/synthetic/synthetic_math_enrollments.csv
 ```
 
-The generator also renders synthetic Canvas-style course profiles:
+The generator also renders year-specific ASMA gradebooks and synthetic Canvas-style course profiles:
 
 ```text
+data/synthetic/assessment_shells/
 data/synthetic/canvas_course_profiles/
+```
+
+Optional SQL mart exports are generated by the DuckDB analytics warehouse:
+
+```text
+data/marts/
 ```
 
 ## What To Inspect First
 
 - [docs/methodology.md](docs/methodology.md) explains the data-generating process, Assignment 01 score generation, the longitudinal score engine, Canvas-style artifacts, and validation checks.
+- [docs/star-schema-erd.md](docs/star-schema-erd.md) diagrams the DuckDB star schema used for downstream reporting.
+- [docs/data-lineage.md](docs/data-lineage.md) documents how synthetic artifacts flow into raw SQL tables, marts, hosted Postgres, and downstream reports.
+- [docs/supabase-postgres-deployment.md](docs/supabase-postgres-deployment.md) explains the optional Supabase/Postgres serving path without committing credentials.
+- [sql/examples/](sql/examples/) contains readable SQL examples for enrollment, growth, missingness, readiness, reconciliation, and dashboard extracts.
 - [data/synthetic/synthetic_school_state.json](data/synthetic/synthetic_school_state.json) is the canonical state object used to render downstream artifacts.
 - [data/synthetic/synthetic_asma_gradebook.csv](data/synthetic/synthetic_asma_gradebook.csv) is the public-safe all-school math assessment gradebook.
 - [scripts/generate_synthetic_math_department.py](scripts/generate_synthetic_math_department.py) contains the simulation logic.
@@ -91,6 +112,46 @@ make validate
 
 The project uses only the Python standard library.
 
+Optional SQL analytics warehouse outputs can be built with DuckDB:
+
+```bash
+make analytics-install
+make warehouse
+```
+
+The warehouse target creates a local `warehouse/synthetic_math.duckdb` database, runs SQL models from `sql/marts/`, exports public-safe mart CSVs to `data/marts/`, and checks `mart.validation_summary`.
+
+See [docs/duckdb-analytics-warehouse.md](docs/duckdb-analytics-warehouse.md) for the SQL workflow.
+
+The warehouse also normalizes synthetic Canvas course profile JSON into `raw_canvas` SQL tables and reconciles those LMS-style records against canonical synthetic enrollments. See [docs/canvas-workflow-simulation.md](docs/canvas-workflow-simulation.md) for the Canvas-to-SQL simulation.
+
+The exported reporting layer includes both analytic marts and a star schema:
+
+```text
+dim_student
+dim_course
+dim_section
+dim_teacher
+dim_assignment
+fact_assessment_score
+fact_lms_enrollment
+```
+
+An optional Supabase/Postgres serving path is scaffolded for the validated star-schema marts. DuckDB remains the reproducible local warehouse; Supabase/Postgres is the hosted serving layer for public-safe synthetic analytics tables and API-style access after a private connection string is supplied locally.
+
+```bash
+make postgres-install
+make postgres-load-dry-run
+```
+
+After setting `SUPABASE_DATABASE_URL` in a local `.env` or shell session, load the hosted database with:
+
+```bash
+make postgres-load
+```
+
+See [docs/supabase-postgres-deployment.md](docs/supabase-postgres-deployment.md) and [docs/duckdb-analytics-warehouse.md](docs/duckdb-analytics-warehouse.md#hosted-postgressupabase-layer).
+
 Optional grade-level calibration diagnostics can be generated from a private gradebook path:
 
 ```bash
@@ -107,6 +168,9 @@ The downstream `assessment-intelligence` project is responsible for the visual a
 
 ```text
 synthetic-education-data -> data generation and validation
+synthetic-education-data -> DuckDB SQL marts and reporting extracts
+synthetic-education-data -> star-schema fact/dimension tables
+synthetic-education-data -> optional Supabase/Postgres hosted deployment for synthetic analytics tables
 assessment-intelligence -> analytics, dashboards, diagnostics, and reporting
 ```
 
@@ -128,24 +192,21 @@ See [docs/public-safety.md](docs/public-safety.md) for the release boundary.
 
 ## Current Status
 
-Current version is an active simulation engine for one baseline school year, not a finished multi-year longitudinal system.
+Current version is an active seven-year longitudinal synthetic math department simulation.
 
-It generates a baseline 2025-2026 synthetic math department with:
+It generates academic years 2025-2026 through 2031-2032 with:
 
-- 287 synthetic students
-- 5 synthetic teachers
+- 696 all-ever synthetic students
+- 287 active students per school year
+- 5 synthetic teachers per school year
 - 9 math course entries
-- 25 sections
-- 287 active enrollments
-- 8 synthetic Canvas course JSON profiles
+- 174 synthetic sections across the seven-year horizon
+- 2,009 active student-year enrollments
+- 62 synthetic Canvas course JSON profiles
 - 14 assessment assignment fields
-- `Assignment 01` populated as beginning-of-year assessment
-- `Assignment 02` populated as the first reusable-engine end-of-year transition
-
-Assignments 03-14 are intentionally blank until later longitudinal transitions are implemented and validated.
-
-## Portfolio Fit
-
-This project is strongest for assessment analyst, education data analyst, institutional research, learning analytics, and edtech data/product roles. It demonstrates statistical simulation, privacy-aware data design, domain modeling, validation workflow, and analytics infrastructure.
+- all 14 assignment windows populated for active student-year records
+- yearly ASMA gradebooks under `data/synthetic/assessment_shells/`
+- a long assessment-score export with 4,018 rows
+- DuckDB mart exports for assessment facts, LMS enrollment facts, readiness, growth, missingness, and roster reconciliation
 
 For a more analysis-facing view of the same synthetic data ecosystem, see the downstream `assessment-intelligence` project.

@@ -1,0 +1,63 @@
+{
+  "canvas_course_id": "SYN-CANVAS-MATH-BEYOND-CORE-2028-2029",
+  "course_id": "MATH-BEYOND-CORE",
+  "course_name": "Beyond Core Math Sequence",
+  "school_year": "2028-2029",
+  "sections": [
+    {
+      "period_label": "Period 5",
+      "section_id": "Y03-SEC-025",
+      "section_label": "Beyond Core Math Sequence - Synthetic Section 04-25",
+      "students": [
+        {
+          "Email": "kgarcia29@schoolname.example",
+          "SIS User ID": "SYN-SIS-000011",
+          "Student": "Synthetic Student 011",
+          "enrollment_status": "active",
+          "grade_level": 12
+        },
+        {
+          "Email": "qlewis29@schoolname.example",
+          "SIS User ID": "SYN-SIS-000016",
+          "Student": "Synthetic Student 016",
+          "enrollment_status": "active",
+          "grade_level": 12
+        },
+        {
+          "Email": "kibrahim29@schoolname.example",
+          "SIS User ID": "SYN-SIS-000051",
+          "Student": "Synthetic Student 051",
+          "enrollment_status": "active",
+          "grade_level": 12
+        },
+        {
+          "Email": "mkim29@schoolname.example",
+          "SIS User ID": "SYN-SIS-000053",
+          "Student": "Synthetic Student 053",
+          "enrollment_status": "active",
+          "grade_level": 12
+        },
+        {
+          "Email": "rortiz29@schoolname.example",
+          "SIS User ID": "SYN-SIS-000057",
+          "Student": "Synthetic Student 057",
+          "enrollment_status": "active",
+          "grade_level": 12
+        },
+        {
+          "Email": "rpatel29@schoolname.example",
+          "SIS User ID": "SYN-SIS-000177",
+          "Student": "Synthetic Student 177",
+          "enrollment_status": "active",
+          "grade_level": 12
+        }
+      ],
+      "teacher": {
+        "teacher_id": "TCH-004",
+        "teacher_label": "Teacher 04"
+      }
+    }
+  ],
+  "source_system": "synthetic_canvas",
+  "track": "beyond_core"
+}

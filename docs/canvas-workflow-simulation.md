@@ -20,17 +20,29 @@ The current generator writes:
 
 ```text
 data/synthetic/synthetic_asma_gradebook.csv
+data/synthetic/synthetic_assessment_scores_long.csv
 data/synthetic/synthetic_math_courses.csv
 data/synthetic/synthetic_math_sections.csv
 data/synthetic/synthetic_math_enrollments.csv
+data/synthetic/assessment_shells/
 data/synthetic/canvas_course_profiles/
 ```
 
-The gradebook contains synthetic Canvas-style student identifiers and 14 generic assignment fields. `Assignment 01` is populated as the beginning-of-year assessment, and `Assignment 02` is populated as the end-of-year assessment. Assignments 03-14 remain scaffolded for later longitudinal transitions.
+The combined gradebook contains every synthetic student who is enrolled at any point in the seven-year simulation and 14 generic assignment fields. Assignment cells are populated only when a student is active during the corresponding school year.
 
-The course, section, and enrollment CSVs provide the math department context needed for downstream analysis.
+The `assessment_shells/` directory contains one active-student ASMA gradebook per academic year. Each yearly shell includes the two assessment windows for that year.
 
-The course profile directory contains one JSON file per current-year eligible math course. Each JSON profile includes course metadata, sections, fake teacher metadata, and enrolled synthetic students.
+The course, section, enrollment, and long assessment-score CSVs provide the math department context needed for downstream analysis.
+
+The course profile directory contains year-scoped JSON files for active Canvas-like math courses:
+
+```text
+data/synthetic/canvas_course_profiles/2025-2026/MATH-ALG1.json
+data/synthetic/canvas_course_profiles/2026-2027/MATH-ALG1.json
+...
+```
+
+Each JSON profile includes course metadata, sections, fake teacher metadata, and active enrolled synthetic students for that school year.
 
 ## Join Model
 
@@ -41,6 +53,7 @@ Email
 ```
 
 The `SIS User ID` field is also stable and unique. Downstream analysis can use either key, but email mirrors the practical Canvas-course join workflow.
+Generated email identifiers use the reserved `schoolname.example` domain.
 
 ## Course JSON Profiles
 
@@ -51,16 +64,20 @@ Current shape:
 ```text
 synthetic_school_state.json
 -> synthetic ASMA gradebook CSV
--> synthetic Canvas math course JSON profiles
+-> yearly synthetic ASMA gradebooks
+-> year-scoped synthetic Canvas math course JSON profiles
 ```
 
-Future enriched analysis shape:
+Enriched analysis shape:
 
 ```text
 synthetic_school_state.json
 -> synthetic ASMA gradebook CSV
+-> long assessment-score CSV
 -> synthetic Canvas math course JSON profiles
--> enriched SDA.csv
+-> normalized SQL tables
+-> reconciled roster and assessment marts
+-> enriched reporting extracts
 ```
 
 Each course JSON profile should include:
@@ -73,6 +90,26 @@ Each course JSON profile should include:
 - enrollment status
 
 The JSON profiles should be downstream renderings of the canonical state, not separate sources of truth.
+
+## Canvas-To-SQL Extraction Simulation
+
+The optional DuckDB warehouse treats the Canvas course JSON profiles as public-safe API-like payloads. The build script parses the course profiles and normalizes them into SQL tables:
+
+```text
+raw_canvas.courses
+raw_canvas.sections
+raw_canvas.enrollments
+```
+
+Those tables support a practical extraction protocol:
+
+1. preserve source course-shell metadata
+2. normalize nested section and roster records
+3. retain stable LMS-style join keys, especially `SIS User ID` and `Email`
+4. reconcile Canvas-derived rosters against canonical enrollment exports by school year
+5. export dashboard-ready marts for downstream assessment analysis
+
+This mirrors the real analytics problem of moving LMS data into a maintainable SQL layer before reporting.
 
 ## Downstream Analysis
 

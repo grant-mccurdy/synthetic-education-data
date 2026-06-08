@@ -15,3 +15,7 @@ reports/private/
 # Generated local-only scratch outputs.
 tmp/
 scratch/
+
+# Generated local analytics warehouse files.
+warehouse/*.duckdb
+warehouse/*.duckdb.wal

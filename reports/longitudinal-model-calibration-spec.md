@@ -6,7 +6,7 @@ Build the calibration layer for the synthetic math department longitudinal model
 
 The immediate purpose is to estimate how grade level should affect the prior for future assessment scores. The grade-level effect should be based on the private reference assessment data, validated through repeated sampling, and used as a weak prior shift rather than a dominant score predictor.
 
-This model must be implemented as a reusable next-assessment score engine. Assignment 02 is the first application because it is the next blank assessment field, not because the model is Assignment 02-specific.
+This model is implemented as a reusable next-assessment score engine. Assignment 02 was the first application, and the current generator now applies the same engine across Assignments 02-14.
 
 Core method:
 
@@ -206,7 +206,8 @@ Required absence/zero checks:
 ```text
 present-student zero rate = 0
 absent-student observed score = 0
-absence does not update academic readiness
+absence does not update observed posterior readiness
+latent readiness still advances while absent
 ```
 
 ## Acceptance Rules
@@ -283,7 +284,8 @@ Required inputs:
 
 ```text
 prior assessment history
-current posterior readiness state
+current latent readiness state
+current observed posterior readiness state
 grade level
 course/track
 teacher/section context
@@ -299,7 +301,8 @@ observed score
 potential score
 present/absent flag
 generation mode
-updated academic state
+updated latent state
+updated observed evidence state when present
 updated attendance state
 ```
 
@@ -307,6 +310,7 @@ Core state:
 
 ```text
 readiness_prior_i
+latent_readiness_i
 posterior_readiness_i
 measurement_error
 assessment_window
@@ -329,30 +333,15 @@ absent_no_update
 General transition:
 
 ```text
-if prior present score exists:
-    posterior_readiness_i = update(readiness_prior_i, observed_score_i, measurement_error)
+latent_readiness_i =
+    evolve(previous_latent_readiness_i, transition_type, context)
+
+if present:
+    observed_score_i = clamp(latent_readiness_i + observation_noise, 1, 100)
+    posterior_readiness_i = update(observed_prior_i, observed_score_i, measurement_error)
 else:
-    posterior_readiness_i = readiness_prior_i
-
-growth_i =
-    base_growth_by_window
-  + regression_to_mean_component
-  + instructor_effect
-  + section_effect
-  + course_track_effect
-  + individual_growth_noise
-
-next_potential_score_i =
-    posterior_readiness_i
-  + growth_i
-  + observation_noise
-
-if absent:
     observed_score_i = 0
-    academic profile unchanged
-else:
-    observed_score_i = clamp(next_potential_score_i, 0, 100)
-    academic profile updated
+    posterior_readiness_i unchanged
 ```
 
 Naming rule:
@@ -380,62 +369,70 @@ Transition pattern:
 | BOY -> EOY | `school_year_growth` | growth during the academic year |
 | EOY -> next BOY | `summer_atrophy` | retention loss or summer regression |
 | no prior present score -> present score | `initialize_readiness` | first academic evidence |
-| absent assessment | `absent_no_update` | observed zero, no academic update |
+| absent assessment | `absent_no_update` | observed zero, no observed-evidence update |
 
-Summer atrophy belongs inside the same longitudinal engine as a distinct transition component. It updates latent readiness between an end-of-year assessment and the next beginning-of-year assessment. Document it now, but implement it after the first school-year growth transition is validated.
+Summer atrophy belongs inside the same longitudinal engine as a distinct transition component. It is implemented for each end-of-year to next beginning-of-year transition after Assignment 02.
 
-## Assignment 02 As First Application
+## Implemented Sequential Cases
 
-Assignment 02 represents end-of-year assessment for the same school year.
+Assignment 02 was the first school-year growth application. The current generator applies the same sequential contract across Assignments 02-14.
 
-Assignment 01 -> Assignment 02 uses `school_year_growth`.
+Odd-numbered assignments after Assignment 01 use `summer_atrophy`. Even-numbered assignments use `school_year_growth`.
 
-### Case 1: Assignment 01 Present
+### Case 1: Prior Present Evidence Exists And Current Student Is Present
 
 ```text
-A01 observed score
+prior observed score
 -> initialize posterior readiness
--> apply end-of-year growth transition
--> draw A02 potential score
--> apply A02 attendance
+-> apply school-year growth or summer atrophy to latent readiness
+-> draw current observed score from latent readiness plus observation noise
+-> update posterior readiness from current present score
 ```
 
 Potential score:
 
 ```text
-A02_potential =
-    posterior_readiness
-  + grade_base_growth
-  + catch_up_or_ceiling_component
+latent_readiness_after =
+    previous_latent_readiness
+  + transition_component
+  + regression_to_mean_component
   + instructor_effect
   + section_effect
   + course_track_effect
-  + residual_noise
+  + process_noise
+
+observed_score_if_present =
+    latent_readiness_after
+  + observation_noise
 ```
 
-### Case 2: Assignment 01 Absent, Assignment 02 Present
+### Case 2: No Prior Present Evidence And Current Student Is Present
 
 ```text
-A01 absent -> academic profile stays pending
-A02 present -> draw from end-of-year grade/window distribution
-A02 score becomes first academic evidence
+prior absences -> observed academic profile stays pending
+hidden latent readiness still advances
+current present score -> observe latent readiness with measurement noise
+current score becomes first observed academic evidence
 ```
 
-The Assignment 01 zero does not initialize or update academic readiness.
+Prior observed zeros do not initialize or update observed posterior readiness.
 
-### Case 3: Assignment 02 Absent
+### Case 3: Current Student Is Absent
 
 ```text
-observed Assignment 02 score = 0
-academic profile is not updated by Assignment 02
+observed current score = 0
+potential score remains blank
+observed posterior readiness is not updated by current assignment
+hidden latent readiness still advances
 attendance/admin profile is updated
 ```
 
 Allowed generation modes:
 
 ```text
-growth_from_assignment_01
-first_evidence_assignment_02
+first_present_evidence_from_latent
+school_year_growth_from_latent_readiness
+summer_atrophy_from_latent_readiness
 absent_no_update
 ```
 
@@ -479,11 +476,11 @@ grade-gap validation chart
 Use these as implementation constraints, not long report content.
 
 - Observed standardized-test scores include measurement error.
-- Historic present-score evidence should update latent readiness rather than act as a raw score feature only.
+- Historic present-score evidence should update observed posterior readiness rather than act as a raw score feature only.
 - Instructor effects should be modeled as small random effects with shrinkage.
 - Do not make causal claims about teacher quality.
 - Absence/missingness must be modeled separately from academic readiness.
-- Summer atrophy is part of the reusable score engine, but implementation should wait for the Assignment 03 transition after Assignment 02 school-year growth is validated.
+- Summer atrophy is part of the reusable score engine and is implemented as the EOY-to-next-BOY transition.
 
 Reference anchors:
 
@@ -493,11 +490,11 @@ Reference anchors:
 - ASA VAM statement: https://www.amstat.org/policy/pdfs/ASA_VAM_Statement.pdf
 - Missing-data research in value-added modeling: https://arxiv.org/abs/1108.2167
 
-## Implementation Handoff Checklist
+## Implementation Maintenance Checklist
 
-The coding agent should implement the calibration layer before future-assignment generation.
+The calibration layer should remain in place before changing future-assignment generation.
 
-Required before future-assignment generation:
+Required before changing calibration or transition rules:
 
 - build grade-specific calibration distributions
 - run repeated same-size validation samples
@@ -507,4 +504,4 @@ Required before future-assignment generation:
 - write private calibration profile
 - write public-safe diagnostic summaries and figures
 
-Do not proceed to longitudinal score generation if the grade-level calibration distribution fails validation.
+Do not expand or materially change the longitudinal score engine if the grade-level calibration distribution fails validation.

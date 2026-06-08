@@ -1,0 +1,175 @@
+section_dim_id,school_year,school_year_offset,section_id,section_label,period_label,course_id,course_dim_id,teacher_id,teacher_dim_id,teacher_label,target_enrollment,max_capacity,class_size_band,section_growth_effect,teacher_growth_effect
+1,2025-2026,0,Y00-SEC-001,Algebra 1 - Synthetic Section 01-01,Period 1,MATH-ALG1,1,TCH-001,1,Teacher 01,11,12,small,-0.3,-0.25
+2,2025-2026,0,Y00-SEC-002,Algebra 1 - Synthetic Section 01-02,Period 2,MATH-ALG1,1,TCH-001,1,Teacher 01,10,12,small,-0.2,-0.25
+3,2025-2026,0,Y00-SEC-003,Geometry - Synthetic Section 01-03,Period 1,MATH-GEOM,2,TCH-002,2,Teacher 02,12,12,small,-0.1,0.1
+4,2025-2026,0,Y00-SEC-004,Geometry - Synthetic Section 01-04,Period 2,MATH-GEOM,2,TCH-002,2,Teacher 02,12,12,small,0.0,0.1
+5,2025-2026,0,Y00-SEC-005,Geometry - Synthetic Section 01-05,Period 3,MATH-GEOM,2,TCH-001,1,Teacher 01,12,12,small,0.1,-0.25
+6,2025-2026,0,Y00-SEC-006,Geometry - Synthetic Section 01-06,Period 3,MATH-GEOM,2,TCH-002,2,Teacher 02,12,12,small,0.2,0.1
+7,2025-2026,0,Y00-SEC-007,Geometry - Synthetic Section 01-07,Period 4,MATH-GEOM,2,TCH-001,1,Teacher 01,12,12,small,0.3,-0.25
+8,2025-2026,0,Y00-SEC-008,Geometry - Synthetic Section 01-08,Period 4,MATH-GEOM,2,TCH-002,2,Teacher 02,11,12,small,-0.3,0.1
+9,2025-2026,0,Y00-SEC-009,Algebra 2 - Synthetic Section 01-09,Period 5,MATH-ALG2,3,TCH-002,2,Teacher 02,12,12,small,-0.2,0.1
+10,2025-2026,0,Y00-SEC-010,Algebra 2 - Synthetic Section 01-10,Period 6,MATH-ALG2,3,TCH-002,2,Teacher 02,12,12,small,-0.1,0.1
+11,2025-2026,0,Y00-SEC-011,Algebra 2 - Synthetic Section 01-11,Period 1,MATH-ALG2,3,TCH-003,3,Teacher 03,11,12,small,0.0,0.2
+12,2025-2026,0,Y00-SEC-012,Honors Algebra 2 - Synthetic Section 01-12,Period 2,MATH-ALG2-H,4,TCH-003,3,Teacher 03,11,12,small,0.1,0.2
+13,2025-2026,0,Y00-SEC-013,Honors Algebra 2 - Synthetic Section 01-13,Period 3,MATH-ALG2-H,4,TCH-003,3,Teacher 03,11,12,small,0.2,0.2
+14,2025-2026,0,Y00-SEC-014,Honors Algebra 2 - Synthetic Section 01-14,Period 4,MATH-ALG2-H,4,TCH-003,3,Teacher 03,11,12,small,0.3,0.2
+15,2025-2026,0,Y00-SEC-015,Honors Algebra 2 - Synthetic Section 01-15,Period 5,MATH-ALG2-H,4,TCH-003,3,Teacher 03,10,12,small,-0.3,0.2
+16,2025-2026,0,Y00-SEC-016,AP Precalculus - Synthetic Section 01-16,Period 1,MATH-AP-PRECALC,5,TCH-004,4,Teacher 04,10,12,small,-0.2,-0.1
+17,2025-2026,0,Y00-SEC-017,AP Precalculus - Synthetic Section 01-17,Period 2,MATH-AP-PRECALC,5,TCH-004,4,Teacher 04,10,12,small,-0.1,-0.1
+18,2025-2026,0,Y00-SEC-018,AP Precalculus - Synthetic Section 01-18,Period 3,MATH-AP-PRECALC,5,TCH-004,4,Teacher 04,9,12,small,0.0,-0.1
+19,2025-2026,0,Y00-SEC-019,Precalculus - Synthetic Section 01-19,Period 4,MATH-PRECALC,6,TCH-004,4,Teacher 04,8,12,small,0.1,-0.1
+20,2025-2026,0,Y00-SEC-020,Precalculus - Synthetic Section 01-20,Period 5,MATH-PRECALC,6,TCH-004,4,Teacher 04,8,12,small,0.2,-0.1
+21,2025-2026,0,Y00-SEC-021,AP Calculus AB - Synthetic Section 01-21,Period 1,MATH-AP-CALC-AB,7,TCH-005,5,Teacher 05,13,18,standard,0.3,0.05
+22,2025-2026,0,Y00-SEC-022,AP Calculus AB - Synthetic Section 01-22,Period 2,MATH-AP-CALC-AB,7,TCH-005,5,Teacher 05,12,12,small,-0.3,0.05
+23,2025-2026,0,Y00-SEC-023,AP Calculus AB - Synthetic Section 01-23,Period 3,MATH-AP-CALC-AB,7,TCH-005,5,Teacher 05,12,12,small,-0.2,0.05
+24,2025-2026,0,Y00-SEC-024,AP Calculus AB - Synthetic Section 01-24,Period 4,MATH-AP-CALC-AB,7,TCH-005,5,Teacher 05,12,12,small,-0.1,0.05
+25,2025-2026,0,Y00-SEC-025,AP Calculus BC - Synthetic Section 01-25,Period 5,MATH-AP-CALC-BC,8,TCH-005,5,Teacher 05,12,12,small,0.0,0.05
+26,2025-2026,0,Y00-SEC-026,AP Calculus BC - Synthetic Section 01-26,Period 6,MATH-AP-CALC-BC,8,TCH-005,5,Teacher 05,11,12,small,0.1,0.05
+27,2026-2027,1,Y01-SEC-001,Algebra 1 - Synthetic Section 02-01,Period 1,MATH-ALG1,1,TCH-001,6,Teacher 01,13,18,standard,-0.3,-0.25
+28,2026-2027,1,Y01-SEC-002,Geometry - Synthetic Section 02-02,Period 1,MATH-GEOM,2,TCH-002,7,Teacher 02,14,18,standard,-0.2,0.1
+29,2026-2027,1,Y01-SEC-003,Geometry - Synthetic Section 02-03,Period 2,MATH-GEOM,2,TCH-001,6,Teacher 01,13,18,standard,-0.1,-0.25
+30,2026-2027,1,Y01-SEC-004,Geometry - Synthetic Section 02-04,Period 2,MATH-GEOM,2,TCH-002,7,Teacher 02,13,18,standard,0.0,0.1
+31,2026-2027,1,Y01-SEC-005,Geometry - Synthetic Section 02-05,Period 3,MATH-GEOM,2,TCH-001,6,Teacher 01,13,18,standard,0.1,-0.25
+32,2026-2027,1,Y01-SEC-006,Algebra 2 - Synthetic Section 02-06,Period 3,MATH-ALG2,3,TCH-002,7,Teacher 02,11,12,small,0.2,0.1
+33,2026-2027,1,Y01-SEC-007,Algebra 2 - Synthetic Section 02-07,Period 4,MATH-ALG2,3,TCH-002,7,Teacher 02,11,12,small,0.3,0.1
+34,2026-2027,1,Y01-SEC-008,Algebra 2 - Synthetic Section 02-08,Period 5,MATH-ALG2,3,TCH-002,7,Teacher 02,11,12,small,-0.3,0.1
+35,2026-2027,1,Y01-SEC-009,Algebra 2 - Synthetic Section 02-09,Period 6,MATH-ALG2,3,TCH-002,7,Teacher 02,10,12,small,-0.2,0.1
+36,2026-2027,1,Y01-SEC-010,Honors Algebra 2 - Synthetic Section 02-10,Period 1,MATH-ALG2-H,4,TCH-003,8,Teacher 03,14,18,standard,-0.1,0.2
+37,2026-2027,1,Y01-SEC-011,Honors Algebra 2 - Synthetic Section 02-11,Period 2,MATH-ALG2-H,4,TCH-003,8,Teacher 03,13,18,standard,0.0,0.2
+38,2026-2027,1,Y01-SEC-012,Honors Algebra 2 - Synthetic Section 02-12,Period 3,MATH-ALG2-H,4,TCH-003,8,Teacher 03,13,18,standard,0.1,0.2
+39,2026-2027,1,Y01-SEC-013,AP Precalculus - Synthetic Section 02-13,Period 1,MATH-AP-PRECALC,5,TCH-004,9,Teacher 04,12,12,small,0.2,-0.1
+40,2026-2027,1,Y01-SEC-014,AP Precalculus - Synthetic Section 02-14,Period 2,MATH-AP-PRECALC,5,TCH-004,9,Teacher 04,11,12,small,0.3,-0.1
+41,2026-2027,1,Y01-SEC-015,AP Precalculus - Synthetic Section 02-15,Period 3,MATH-AP-PRECALC,5,TCH-004,9,Teacher 04,11,12,small,-0.3,-0.1
+42,2026-2027,1,Y01-SEC-016,AP Precalculus - Synthetic Section 02-16,Period 4,MATH-AP-PRECALC,5,TCH-004,9,Teacher 04,11,12,small,-0.2,-0.1
+43,2026-2027,1,Y01-SEC-017,Precalculus - Synthetic Section 02-17,Period 4,MATH-PRECALC,6,TCH-003,8,Teacher 03,12,12,small,-0.1,0.2
+44,2026-2027,1,Y01-SEC-018,Precalculus - Synthetic Section 02-18,Period 5,MATH-PRECALC,6,TCH-003,8,Teacher 03,12,12,small,0.0,0.2
+45,2026-2027,1,Y01-SEC-019,Precalculus - Synthetic Section 02-19,Period 5,MATH-PRECALC,6,TCH-004,9,Teacher 04,11,12,small,0.1,-0.1
+46,2026-2027,1,Y01-SEC-020,AP Calculus AB - Synthetic Section 02-20,Period 1,MATH-AP-CALC-AB,7,TCH-005,10,Teacher 05,14,18,standard,0.2,0.05
+47,2026-2027,1,Y01-SEC-021,AP Calculus AB - Synthetic Section 02-21,Period 2,MATH-AP-CALC-AB,7,TCH-005,10,Teacher 05,13,18,standard,0.3,0.05
+48,2026-2027,1,Y01-SEC-022,AP Calculus BC - Synthetic Section 02-22,Period 3,MATH-AP-CALC-BC,8,TCH-005,10,Teacher 05,14,18,standard,-0.3,0.05
+49,2026-2027,1,Y01-SEC-023,AP Calculus BC - Synthetic Section 02-23,Period 4,MATH-AP-CALC-BC,8,TCH-005,10,Teacher 05,13,18,standard,-0.2,0.05
+50,2026-2027,1,Y01-SEC-024,Beyond Core Math Sequence - Synthetic Section 02-24,Period 5,MATH-BEYOND-CORE,9,TCH-005,10,Teacher 05,4,6,micro,-0.1,0.05
+51,2027-2028,2,Y02-SEC-001,Algebra 1 - Synthetic Section 03-01,Period 1,MATH-ALG1,1,TCH-001,11,Teacher 01,13,18,standard,-0.3,-0.25
+52,2027-2028,2,Y02-SEC-002,Geometry - Synthetic Section 03-02,Period 1,MATH-GEOM,2,TCH-002,12,Teacher 02,12,12,small,-0.2,0.1
+53,2027-2028,2,Y02-SEC-003,Geometry - Synthetic Section 03-03,Period 2,MATH-GEOM,2,TCH-001,11,Teacher 01,12,12,small,-0.1,-0.25
+54,2027-2028,2,Y02-SEC-004,Geometry - Synthetic Section 03-04,Period 2,MATH-GEOM,2,TCH-002,12,Teacher 02,12,12,small,0.0,0.1
+55,2027-2028,2,Y02-SEC-005,Geometry - Synthetic Section 03-05,Period 3,MATH-GEOM,2,TCH-001,11,Teacher 01,12,12,small,0.1,-0.25
+56,2027-2028,2,Y02-SEC-006,Algebra 2 - Synthetic Section 03-06,Period 3,MATH-ALG2,3,TCH-002,12,Teacher 02,13,18,standard,0.2,0.1
+57,2027-2028,2,Y02-SEC-007,Algebra 2 - Synthetic Section 03-07,Period 4,MATH-ALG2,3,TCH-002,12,Teacher 02,13,18,standard,0.3,0.1
+58,2027-2028,2,Y02-SEC-008,Algebra 2 - Synthetic Section 03-08,Period 5,MATH-ALG2,3,TCH-002,12,Teacher 02,13,18,standard,-0.3,0.1
+59,2027-2028,2,Y02-SEC-009,Honors Algebra 2 - Synthetic Section 03-09,Period 1,MATH-ALG2-H,4,TCH-003,13,Teacher 03,14,18,standard,-0.2,0.2
+60,2027-2028,2,Y02-SEC-010,Honors Algebra 2 - Synthetic Section 03-10,Period 2,MATH-ALG2-H,4,TCH-003,13,Teacher 03,13,18,standard,-0.1,0.2
+61,2027-2028,2,Y02-SEC-011,AP Precalculus - Synthetic Section 03-11,Period 1,MATH-AP-PRECALC,5,TCH-004,14,Teacher 04,14,18,standard,0.0,-0.1
+62,2027-2028,2,Y02-SEC-012,AP Precalculus - Synthetic Section 03-12,Period 2,MATH-AP-PRECALC,5,TCH-004,14,Teacher 04,13,18,standard,0.1,-0.1
+63,2027-2028,2,Y02-SEC-013,AP Precalculus - Synthetic Section 03-13,Period 3,MATH-AP-PRECALC,5,TCH-004,14,Teacher 04,13,18,standard,0.2,-0.1
+64,2027-2028,2,Y02-SEC-014,Precalculus - Synthetic Section 03-14,Period 3,MATH-PRECALC,6,TCH-003,13,Teacher 03,14,18,standard,0.3,0.2
+65,2027-2028,2,Y02-SEC-015,Precalculus - Synthetic Section 03-15,Period 4,MATH-PRECALC,6,TCH-003,13,Teacher 03,13,18,standard,-0.3,0.2
+66,2027-2028,2,Y02-SEC-016,Precalculus - Synthetic Section 03-16,Period 4,MATH-PRECALC,6,TCH-004,14,Teacher 04,13,18,standard,-0.2,-0.1
+67,2027-2028,2,Y02-SEC-017,AP Calculus AB - Synthetic Section 03-17,Period 1,MATH-AP-CALC-AB,7,TCH-005,15,Teacher 05,12,12,small,-0.1,0.05
+68,2027-2028,2,Y02-SEC-018,AP Calculus AB - Synthetic Section 03-18,Period 2,MATH-AP-CALC-AB,7,TCH-005,15,Teacher 05,12,12,small,0.0,0.05
+69,2027-2028,2,Y02-SEC-019,AP Calculus AB - Synthetic Section 03-19,Period 3,MATH-AP-CALC-AB,7,TCH-005,15,Teacher 05,12,12,small,0.1,0.05
+70,2027-2028,2,Y02-SEC-020,AP Calculus AB - Synthetic Section 03-20,Period 4,MATH-AP-CALC-AB,7,TCH-005,15,Teacher 05,11,12,small,0.2,0.05
+71,2027-2028,2,Y02-SEC-021,AP Calculus AB - Synthetic Section 03-21,Period 5,MATH-AP-CALC-AB,7,TCH-004,14,Teacher 04,11,12,small,0.3,-0.1
+72,2027-2028,2,Y02-SEC-022,AP Calculus BC - Synthetic Section 03-22,Period 5,MATH-AP-CALC-BC,8,TCH-005,15,Teacher 05,8,12,small,-0.3,0.05
+73,2027-2028,2,Y02-SEC-023,AP Calculus BC - Synthetic Section 03-23,Period 6,MATH-AP-CALC-BC,8,TCH-005,15,Teacher 05,8,12,small,-0.2,0.05
+74,2027-2028,2,Y02-SEC-024,Beyond Core Math Sequence - Synthetic Section 03-24,Period 6,MATH-BEYOND-CORE,9,TCH-004,14,Teacher 04,6,6,micro,-0.1,-0.1
+75,2028-2029,3,Y03-SEC-001,Algebra 1 - Synthetic Section 04-01,Period 1,MATH-ALG1,1,TCH-001,16,Teacher 01,8,12,small,-0.3,-0.25
+76,2028-2029,3,Y03-SEC-002,Algebra 1 - Synthetic Section 04-02,Period 2,MATH-ALG1,1,TCH-001,16,Teacher 01,8,12,small,-0.2,-0.25
+77,2028-2029,3,Y03-SEC-003,Geometry - Synthetic Section 04-03,Period 1,MATH-GEOM,2,TCH-002,17,Teacher 02,14,18,standard,-0.1,0.1
+78,2028-2029,3,Y03-SEC-004,Geometry - Synthetic Section 04-04,Period 2,MATH-GEOM,2,TCH-002,17,Teacher 02,14,18,standard,0.0,0.1
+79,2028-2029,3,Y03-SEC-005,Geometry - Synthetic Section 04-05,Period 3,MATH-GEOM,2,TCH-001,16,Teacher 01,14,18,standard,0.1,-0.25
+80,2028-2029,3,Y03-SEC-006,Geometry - Synthetic Section 04-06,Period 3,MATH-GEOM,2,TCH-002,17,Teacher 02,13,18,standard,0.2,0.1
+81,2028-2029,3,Y03-SEC-007,Algebra 2 - Synthetic Section 04-07,Period 4,MATH-ALG2,3,TCH-002,17,Teacher 02,12,12,small,0.3,0.1
+82,2028-2029,3,Y03-SEC-008,Algebra 2 - Synthetic Section 04-08,Period 5,MATH-ALG2,3,TCH-002,17,Teacher 02,11,12,small,-0.3,0.1
+83,2028-2029,3,Y03-SEC-009,Algebra 2 - Synthetic Section 04-09,Period 6,MATH-ALG2,3,TCH-002,17,Teacher 02,11,12,small,-0.2,0.1
+84,2028-2029,3,Y03-SEC-010,Honors Algebra 2 - Synthetic Section 04-10,Period 1,MATH-ALG2-H,4,TCH-003,18,Teacher 03,10,12,small,-0.1,0.2
+85,2028-2029,3,Y03-SEC-011,Honors Algebra 2 - Synthetic Section 04-11,Period 2,MATH-ALG2-H,4,TCH-003,18,Teacher 03,10,12,small,0.0,0.2
+86,2028-2029,3,Y03-SEC-012,Honors Algebra 2 - Synthetic Section 04-12,Period 3,MATH-ALG2-H,4,TCH-003,18,Teacher 03,9,12,small,0.1,0.2
+87,2028-2029,3,Y03-SEC-013,AP Precalculus - Synthetic Section 04-13,Period 1,MATH-AP-PRECALC,5,TCH-004,19,Teacher 04,10,12,small,0.2,-0.1
+88,2028-2029,3,Y03-SEC-014,AP Precalculus - Synthetic Section 04-14,Period 2,MATH-AP-PRECALC,5,TCH-004,19,Teacher 04,10,12,small,0.3,-0.1
+89,2028-2029,3,Y03-SEC-015,AP Precalculus - Synthetic Section 04-15,Period 3,MATH-AP-PRECALC,5,TCH-004,19,Teacher 04,9,12,small,-0.3,-0.1
+90,2028-2029,3,Y03-SEC-016,Precalculus - Synthetic Section 04-16,Period 4,MATH-PRECALC,6,TCH-003,18,Teacher 03,13,18,standard,-0.2,0.2
+91,2028-2029,3,Y03-SEC-017,Precalculus - Synthetic Section 04-17,Period 4,MATH-PRECALC,6,TCH-004,19,Teacher 04,13,18,standard,-0.1,-0.1
+92,2028-2029,3,Y03-SEC-018,Precalculus - Synthetic Section 04-18,Period 5,MATH-PRECALC,6,TCH-003,18,Teacher 03,12,12,small,0.0,0.2
+93,2028-2029,3,Y03-SEC-019,AP Calculus AB - Synthetic Section 04-19,Period 1,MATH-AP-CALC-AB,7,TCH-005,20,Teacher 05,14,18,standard,0.1,0.05
+94,2028-2029,3,Y03-SEC-020,AP Calculus AB - Synthetic Section 04-20,Period 2,MATH-AP-CALC-AB,7,TCH-005,20,Teacher 05,14,18,standard,0.2,0.05
+95,2028-2029,3,Y03-SEC-021,AP Calculus AB - Synthetic Section 04-21,Period 3,MATH-AP-CALC-AB,7,TCH-005,20,Teacher 05,13,18,standard,0.3,0.05
+96,2028-2029,3,Y03-SEC-022,AP Calculus AB - Synthetic Section 04-22,Period 4,MATH-AP-CALC-AB,7,TCH-005,20,Teacher 05,13,18,standard,-0.3,0.05
+97,2028-2029,3,Y03-SEC-023,AP Calculus BC - Synthetic Section 04-23,Period 5,MATH-AP-CALC-BC,8,TCH-005,20,Teacher 05,13,18,standard,-0.2,0.05
+98,2028-2029,3,Y03-SEC-024,AP Calculus BC - Synthetic Section 04-24,Period 6,MATH-AP-CALC-BC,8,TCH-005,20,Teacher 05,13,18,standard,-0.1,0.05
+99,2028-2029,3,Y03-SEC-025,Beyond Core Math Sequence - Synthetic Section 04-25,Period 5,MATH-BEYOND-CORE,9,TCH-004,19,Teacher 04,6,6,micro,0.0,-0.1
+100,2029-2030,4,Y04-SEC-001,Algebra 1 - Synthetic Section 05-01,Period 1,MATH-ALG1,1,TCH-001,21,Teacher 01,10,12,small,-0.3,-0.25
+101,2029-2030,4,Y04-SEC-002,Algebra 1 - Synthetic Section 05-02,Period 2,MATH-ALG1,1,TCH-001,21,Teacher 01,9,12,small,-0.2,-0.25
+102,2029-2030,4,Y04-SEC-003,Geometry - Synthetic Section 05-03,Period 1,MATH-GEOM,2,TCH-002,22,Teacher 02,13,18,standard,-0.1,0.1
+103,2029-2030,4,Y04-SEC-004,Geometry - Synthetic Section 05-04,Period 2,MATH-GEOM,2,TCH-002,22,Teacher 02,13,18,standard,0.0,0.1
+104,2029-2030,4,Y04-SEC-005,Geometry - Synthetic Section 05-05,Period 3,MATH-GEOM,2,TCH-001,21,Teacher 01,13,18,standard,0.1,-0.25
+105,2029-2030,4,Y04-SEC-006,Geometry - Synthetic Section 05-06,Period 3,MATH-GEOM,2,TCH-002,22,Teacher 02,13,18,standard,0.2,0.1
+106,2029-2030,4,Y04-SEC-007,Geometry - Synthetic Section 05-07,Period 4,MATH-GEOM,2,TCH-001,21,Teacher 01,13,18,standard,0.3,-0.25
+107,2029-2030,4,Y04-SEC-008,Algebra 2 - Synthetic Section 05-08,Period 4,MATH-ALG2,3,TCH-002,22,Teacher 02,13,18,standard,-0.3,0.1
+108,2029-2030,4,Y04-SEC-009,Algebra 2 - Synthetic Section 05-09,Period 5,MATH-ALG2,3,TCH-002,22,Teacher 02,13,18,standard,-0.2,0.1
+109,2029-2030,4,Y04-SEC-010,Algebra 2 - Synthetic Section 05-10,Period 6,MATH-ALG2,3,TCH-002,22,Teacher 02,13,18,standard,-0.1,0.1
+110,2029-2030,4,Y04-SEC-011,Honors Algebra 2 - Synthetic Section 05-11,Period 1,MATH-ALG2-H,4,TCH-003,23,Teacher 03,12,12,small,0.0,0.2
+111,2029-2030,4,Y04-SEC-012,Honors Algebra 2 - Synthetic Section 05-12,Period 2,MATH-ALG2-H,4,TCH-003,23,Teacher 03,11,12,small,0.1,0.2
+112,2029-2030,4,Y04-SEC-013,Honors Algebra 2 - Synthetic Section 05-13,Period 3,MATH-ALG2-H,4,TCH-003,23,Teacher 03,11,12,small,0.2,0.2
+113,2029-2030,4,Y04-SEC-014,AP Precalculus - Synthetic Section 05-14,Period 1,MATH-AP-PRECALC,5,TCH-004,24,Teacher 04,11,12,small,0.3,-0.1
+114,2029-2030,4,Y04-SEC-015,AP Precalculus - Synthetic Section 05-15,Period 2,MATH-AP-PRECALC,5,TCH-004,24,Teacher 04,11,12,small,-0.3,-0.1
+115,2029-2030,4,Y04-SEC-016,AP Precalculus - Synthetic Section 05-16,Period 3,MATH-AP-PRECALC,5,TCH-004,24,Teacher 04,10,12,small,-0.2,-0.1
+116,2029-2030,4,Y04-SEC-017,Precalculus - Synthetic Section 05-17,Period 4,MATH-PRECALC,6,TCH-003,23,Teacher 03,12,12,small,-0.1,0.2
+117,2029-2030,4,Y04-SEC-018,Precalculus - Synthetic Section 05-18,Period 4,MATH-PRECALC,6,TCH-004,24,Teacher 04,11,12,small,0.0,-0.1
+118,2029-2030,4,Y04-SEC-019,Precalculus - Synthetic Section 05-19,Period 5,MATH-PRECALC,6,TCH-003,23,Teacher 03,11,12,small,0.1,0.2
+119,2029-2030,4,Y04-SEC-020,AP Calculus AB - Synthetic Section 05-20,Period 1,MATH-AP-CALC-AB,7,TCH-005,25,Teacher 05,11,12,small,0.2,0.05
+120,2029-2030,4,Y04-SEC-021,AP Calculus AB - Synthetic Section 05-21,Period 2,MATH-AP-CALC-AB,7,TCH-005,25,Teacher 05,11,12,small,0.3,0.05
+121,2029-2030,4,Y04-SEC-022,AP Calculus AB - Synthetic Section 05-22,Period 3,MATH-AP-CALC-AB,7,TCH-005,25,Teacher 05,11,12,small,-0.3,0.05
+122,2029-2030,4,Y04-SEC-023,AP Calculus AB - Synthetic Section 05-23,Period 4,MATH-AP-CALC-AB,7,TCH-005,25,Teacher 05,10,12,small,-0.2,0.05
+123,2029-2030,4,Y04-SEC-024,AP Calculus BC - Synthetic Section 05-24,Period 5,MATH-AP-CALC-BC,8,TCH-005,25,Teacher 05,9,12,small,-0.1,0.05
+124,2029-2030,4,Y04-SEC-025,AP Calculus BC - Synthetic Section 05-25,Period 6,MATH-AP-CALC-BC,8,TCH-005,25,Teacher 05,8,12,small,0.0,0.05
+125,2029-2030,4,Y04-SEC-026,Beyond Core Math Sequence - Synthetic Section 05-26,Period 5,MATH-BEYOND-CORE,9,TCH-004,24,Teacher 04,4,6,micro,0.1,-0.1
+126,2030-2031,5,Y05-SEC-001,Algebra 1 - Synthetic Section 06-01,Period 1,MATH-ALG1,1,TCH-001,26,Teacher 01,13,18,standard,-0.3,-0.25
+127,2030-2031,5,Y05-SEC-002,Geometry - Synthetic Section 06-02,Period 1,MATH-GEOM,2,TCH-002,27,Teacher 02,13,18,standard,-0.2,0.1
+128,2030-2031,5,Y05-SEC-003,Geometry - Synthetic Section 06-03,Period 2,MATH-GEOM,2,TCH-001,26,Teacher 01,13,18,standard,-0.1,-0.25
+129,2030-2031,5,Y05-SEC-004,Geometry - Synthetic Section 06-04,Period 2,MATH-GEOM,2,TCH-002,27,Teacher 02,13,18,standard,0.0,0.1
+130,2030-2031,5,Y05-SEC-005,Geometry - Synthetic Section 06-05,Period 3,MATH-GEOM,2,TCH-001,26,Teacher 01,12,12,small,0.1,-0.25
+131,2030-2031,5,Y05-SEC-006,Algebra 2 - Synthetic Section 06-06,Period 3,MATH-ALG2,3,TCH-002,27,Teacher 02,12,12,small,0.2,0.1
+132,2030-2031,5,Y05-SEC-007,Algebra 2 - Synthetic Section 06-07,Period 4,MATH-ALG2,3,TCH-002,27,Teacher 02,11,12,small,0.3,0.1
+133,2030-2031,5,Y05-SEC-008,Algebra 2 - Synthetic Section 06-08,Period 5,MATH-ALG2,3,TCH-002,27,Teacher 02,11,12,small,-0.3,0.1
+134,2030-2031,5,Y05-SEC-009,Algebra 2 - Synthetic Section 06-09,Period 6,MATH-ALG2,3,TCH-002,27,Teacher 02,11,12,small,-0.2,0.1
+135,2030-2031,5,Y05-SEC-010,Honors Algebra 2 - Synthetic Section 06-10,Period 1,MATH-ALG2-H,4,TCH-003,28,Teacher 03,11,12,small,-0.1,0.2
+136,2030-2031,5,Y05-SEC-011,Honors Algebra 2 - Synthetic Section 06-11,Period 2,MATH-ALG2-H,4,TCH-003,28,Teacher 03,11,12,small,0.0,0.2
+137,2030-2031,5,Y05-SEC-012,Honors Algebra 2 - Synthetic Section 06-12,Period 3,MATH-ALG2-H,4,TCH-003,28,Teacher 03,10,12,small,0.1,0.2
+138,2030-2031,5,Y05-SEC-013,AP Precalculus - Synthetic Section 06-13,Period 1,MATH-AP-PRECALC,5,TCH-004,29,Teacher 04,12,12,small,0.2,-0.1
+139,2030-2031,5,Y05-SEC-014,AP Precalculus - Synthetic Section 06-14,Period 2,MATH-AP-PRECALC,5,TCH-004,29,Teacher 04,12,12,small,0.3,-0.1
+140,2030-2031,5,Y05-SEC-015,AP Precalculus - Synthetic Section 06-15,Period 3,MATH-AP-PRECALC,5,TCH-004,29,Teacher 04,12,12,small,-0.3,-0.1
+141,2030-2031,5,Y05-SEC-016,Precalculus - Synthetic Section 06-16,Period 4,MATH-PRECALC,6,TCH-003,28,Teacher 03,13,18,standard,-0.2,0.2
+142,2030-2031,5,Y05-SEC-017,Precalculus - Synthetic Section 06-17,Period 4,MATH-PRECALC,6,TCH-004,29,Teacher 04,13,18,standard,-0.1,-0.1
+143,2030-2031,5,Y05-SEC-018,Precalculus - Synthetic Section 06-18,Period 5,MATH-PRECALC,6,TCH-003,28,Teacher 03,13,18,standard,0.0,0.2
+144,2030-2031,5,Y05-SEC-019,AP Calculus AB - Synthetic Section 06-19,Period 1,MATH-AP-CALC-AB,7,TCH-005,30,Teacher 05,12,12,small,0.1,0.05
+145,2030-2031,5,Y05-SEC-020,AP Calculus AB - Synthetic Section 06-20,Period 2,MATH-AP-CALC-AB,7,TCH-005,30,Teacher 05,11,12,small,0.2,0.05
+146,2030-2031,5,Y05-SEC-021,AP Calculus AB - Synthetic Section 06-21,Period 3,MATH-AP-CALC-AB,7,TCH-005,30,Teacher 05,11,12,small,0.3,0.05
+147,2030-2031,5,Y05-SEC-022,AP Calculus AB - Synthetic Section 06-22,Period 4,MATH-AP-CALC-AB,7,TCH-005,30,Teacher 05,11,12,small,-0.3,0.05
+148,2030-2031,5,Y05-SEC-023,AP Calculus BC - Synthetic Section 06-23,Period 5,MATH-AP-CALC-BC,8,TCH-005,30,Teacher 05,11,12,small,-0.2,0.05
+149,2030-2031,5,Y05-SEC-024,AP Calculus BC - Synthetic Section 06-24,Period 6,MATH-AP-CALC-BC,8,TCH-005,30,Teacher 05,10,12,small,-0.1,0.05
+150,2030-2031,5,Y05-SEC-025,Beyond Core Math Sequence - Synthetic Section 06-25,Period 5,MATH-BEYOND-CORE,9,TCH-004,29,Teacher 04,5,6,micro,0.0,-0.1
+151,2031-2032,6,Y06-SEC-001,Algebra 1 - Synthetic Section 07-01,Period 1,MATH-ALG1,1,TCH-001,31,Teacher 01,13,18,standard,-0.3,-0.25
+152,2031-2032,6,Y06-SEC-002,Geometry - Synthetic Section 07-02,Period 1,MATH-GEOM,2,TCH-002,32,Teacher 02,12,12,small,-0.2,0.1
+153,2031-2032,6,Y06-SEC-003,Geometry - Synthetic Section 07-03,Period 2,MATH-GEOM,2,TCH-001,31,Teacher 01,12,12,small,-0.1,-0.25
+154,2031-2032,6,Y06-SEC-004,Geometry - Synthetic Section 07-04,Period 2,MATH-GEOM,2,TCH-002,32,Teacher 02,12,12,small,0.0,0.1
+155,2031-2032,6,Y06-SEC-005,Geometry - Synthetic Section 07-05,Period 3,MATH-GEOM,2,TCH-001,31,Teacher 01,12,12,small,0.1,-0.25
+156,2031-2032,6,Y06-SEC-006,Algebra 2 - Synthetic Section 07-06,Period 3,MATH-ALG2,3,TCH-002,32,Teacher 02,12,12,small,0.2,0.1
+157,2031-2032,6,Y06-SEC-007,Algebra 2 - Synthetic Section 07-07,Period 4,MATH-ALG2,3,TCH-002,32,Teacher 02,12,12,small,0.3,0.1
+158,2031-2032,6,Y06-SEC-008,Algebra 2 - Synthetic Section 07-08,Period 5,MATH-ALG2,3,TCH-002,32,Teacher 02,12,12,small,-0.3,0.1
+159,2031-2032,6,Y06-SEC-009,Honors Algebra 2 - Synthetic Section 07-09,Period 1,MATH-ALG2-H,4,TCH-003,33,Teacher 03,14,18,standard,-0.2,0.2
+160,2031-2032,6,Y06-SEC-010,Honors Algebra 2 - Synthetic Section 07-10,Period 2,MATH-ALG2-H,4,TCH-003,33,Teacher 03,14,18,standard,-0.1,0.2
+161,2031-2032,6,Y06-SEC-011,AP Precalculus - Synthetic Section 07-11,Period 1,MATH-AP-PRECALC,5,TCH-004,34,Teacher 04,12,12,small,0.0,-0.1
+162,2031-2032,6,Y06-SEC-012,AP Precalculus - Synthetic Section 07-12,Period 2,MATH-AP-PRECALC,5,TCH-004,34,Teacher 04,11,12,small,0.1,-0.1
+163,2031-2032,6,Y06-SEC-013,AP Precalculus - Synthetic Section 07-13,Period 3,MATH-AP-PRECALC,5,TCH-004,34,Teacher 04,11,12,small,0.2,-0.1
+164,2031-2032,6,Y06-SEC-014,Precalculus - Synthetic Section 07-14,Period 3,MATH-PRECALC,6,TCH-003,33,Teacher 03,12,12,small,0.3,0.2
+165,2031-2032,6,Y06-SEC-015,Precalculus - Synthetic Section 07-15,Period 4,MATH-PRECALC,6,TCH-003,33,Teacher 03,11,12,small,-0.3,0.2
+166,2031-2032,6,Y06-SEC-016,Precalculus - Synthetic Section 07-16,Period 4,MATH-PRECALC,6,TCH-004,34,Teacher 04,11,12,small,-0.2,-0.1
+167,2031-2032,6,Y06-SEC-017,Precalculus - Synthetic Section 07-17,Period 5,MATH-PRECALC,6,TCH-003,33,Teacher 03,11,12,small,-0.1,0.2
+168,2031-2032,6,Y06-SEC-018,AP Calculus AB - Synthetic Section 07-18,Period 1,MATH-AP-CALC-AB,7,TCH-005,35,Teacher 05,14,18,standard,0.0,0.05
+169,2031-2032,6,Y06-SEC-019,AP Calculus AB - Synthetic Section 07-19,Period 2,MATH-AP-CALC-AB,7,TCH-005,35,Teacher 05,14,18,standard,0.1,0.05
+170,2031-2032,6,Y06-SEC-020,AP Calculus AB - Synthetic Section 07-20,Period 3,MATH-AP-CALC-AB,7,TCH-005,35,Teacher 05,14,18,standard,0.2,0.05
+171,2031-2032,6,Y06-SEC-021,AP Calculus AB - Synthetic Section 07-21,Period 4,MATH-AP-CALC-AB,7,TCH-005,35,Teacher 05,13,18,standard,0.3,0.05
+172,2031-2032,6,Y06-SEC-022,AP Calculus BC - Synthetic Section 07-22,Period 5,MATH-AP-CALC-BC,8,TCH-005,35,Teacher 05,12,12,small,-0.3,0.05
+173,2031-2032,6,Y06-SEC-023,AP Calculus BC - Synthetic Section 07-23,Period 6,MATH-AP-CALC-BC,8,TCH-005,35,Teacher 05,12,12,small,-0.2,0.05
+174,2031-2032,6,Y06-SEC-024,Beyond Core Math Sequence - Synthetic Section 07-24,Period 5,MATH-BEYOND-CORE,9,TCH-004,34,Teacher 04,4,6,micro,-0.1,-0.1

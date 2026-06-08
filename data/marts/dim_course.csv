@@ -1,0 +1,10 @@
+course_dim_id,course_id,course_name,course_track,sequence_order,current_year_eligible
+1,MATH-ALG1,Algebra 1,regular,1,true
+2,MATH-GEOM,Geometry,regular,2,true
+3,MATH-ALG2,Algebra 2,regular,3,true
+4,MATH-ALG2-H,Honors Algebra 2,honors,3,true
+5,MATH-AP-PRECALC,AP Precalculus,ap,4,true
+6,MATH-PRECALC,Precalculus,regular,4,true
+7,MATH-AP-CALC-AB,AP Calculus AB,ap,5,true
+8,MATH-AP-CALC-BC,AP Calculus BC,ap,5,true
+9,MATH-BEYOND-CORE,Beyond Core Math Sequence,beyond_core,6,true

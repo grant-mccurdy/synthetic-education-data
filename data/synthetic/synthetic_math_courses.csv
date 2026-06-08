@@ -7,4 +7,4 @@ MATH-PRECALC,Precalculus,regular,4,True
 MATH-AP-PRECALC,AP Precalculus,ap,4,True
 MATH-AP-CALC-AB,AP Calculus AB,ap,5,True
 MATH-AP-CALC-BC,AP Calculus BC,ap,5,True
-MATH-BEYOND-CORE,Beyond Core Math Sequence,beyond_core,6,False
+MATH-BEYOND-CORE,Beyond Core Math Sequence,beyond_core,6,True

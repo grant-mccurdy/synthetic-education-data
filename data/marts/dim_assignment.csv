@@ -1,0 +1,15 @@
+assignment_dim_id,assignment_label,sequence_index,school_year,school_year_offset,assessment_window,transition_type,population_status
+1,Assignment 01,1,2025-2026,0,beginning_of_year,initialize_readiness,populated
+2,Assignment 02,2,2025-2026,0,end_of_year,school_year_growth,populated
+3,Assignment 03,3,2026-2027,1,beginning_of_year,summer_atrophy,populated
+4,Assignment 04,4,2026-2027,1,end_of_year,school_year_growth,populated
+5,Assignment 05,5,2027-2028,2,beginning_of_year,summer_atrophy,populated
+6,Assignment 06,6,2027-2028,2,end_of_year,school_year_growth,populated
+7,Assignment 07,7,2028-2029,3,beginning_of_year,summer_atrophy,populated
+8,Assignment 08,8,2028-2029,3,end_of_year,school_year_growth,populated
+9,Assignment 09,9,2029-2030,4,beginning_of_year,summer_atrophy,populated
+10,Assignment 10,10,2029-2030,4,end_of_year,school_year_growth,populated
+11,Assignment 11,11,2030-2031,5,beginning_of_year,summer_atrophy,populated
+12,Assignment 12,12,2030-2031,5,end_of_year,school_year_growth,populated
+13,Assignment 13,13,2031-2032,6,beginning_of_year,summer_atrophy,populated
+14,Assignment 14,14,2031-2032,6,end_of_year,school_year_growth,populated

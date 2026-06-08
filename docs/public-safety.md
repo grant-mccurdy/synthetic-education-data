@@ -7,7 +7,7 @@ This repository is intended to be public-safe. It may contain synthetic data, sy
 The public repository may include:
 
 - fake student names and IDs
-- fake school-format emails
+- fake LMS-style emails on the reserved `schoolname.example` domain
 - fake teacher labels
 - fake section labels
 - standard course names
@@ -65,4 +65,4 @@ Before committing or pushing:
 make all
 ```
 
-The validator checks artifact shape, row counts, enrollment consistency, score bounds, assignment population policy, and banned private/source strings.
+The validator checks artifact shape, row counts, enrollment consistency, score bounds, assignment population policy, longitudinal method behavior, and banned private/source strings.

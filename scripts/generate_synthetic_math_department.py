@@ -5,7 +5,10 @@ from __future__ import annotations
 
 import csv
 import json
+import math
 import random
+import tempfile
+from collections import Counter, defaultdict
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
@@ -18,12 +21,16 @@ GRADEBOOK_PATH = SYNTHETIC_DATA_DIR / "synthetic_asma_gradebook.csv"
 COURSES_PATH = SYNTHETIC_DATA_DIR / "synthetic_math_courses.csv"
 SECTIONS_PATH = SYNTHETIC_DATA_DIR / "synthetic_math_sections.csv"
 ENROLLMENTS_PATH = SYNTHETIC_DATA_DIR / "synthetic_math_enrollments.csv"
+ASSESSMENT_LONG_PATH = SYNTHETIC_DATA_DIR / "synthetic_assessment_scores_long.csv"
 CANVAS_COURSE_PROFILES_DIR = SYNTHETIC_DATA_DIR / "canvas_course_profiles"
+ASSESSMENT_SHELLS_DIR = SYNTHETIC_DATA_DIR / "assessment_shells"
 
-SCHOOL_YEAR = "2025-2026"
+BASE_START_YEAR = 2025
+SCHOOL_YEAR_COUNT = 7
 SEED = 20260604
-ROW_COUNT = 287
+ACTIVE_STUDENT_COUNT = 287
 ASSIGNMENT_COUNT = 14
+SYNTHETIC_EMAIL_DOMAIN = "schoolname.example"
 
 ATTENDANCE_CATEGORIES = (
     ("high", 0.40, (98, 2)),
@@ -77,12 +84,17 @@ LAST_NAMES = (
     "Price",
 )
 
-GRADE_BY_GRADUATION_YEAR = {"29": 9, "28": 10, "27": 11, "26": 12}
-GRADUATION_YEAR_BY_GRADE = {grade: year for year, grade in GRADE_BY_GRADUATION_YEAR.items()}
-GRADE_COUNTS = {9: 89, 10: 76, 11: 63, 12: 59}
+INITIAL_GRADE_COUNTS = {9: 89, 10: 76, 11: 63, 12: 59}
+INITIAL_GRADE_COURSE_COUNTS = {
+    9: {"MATH-ALG1": 19, "MATH-GEOM": 49, "MATH-ALG2-H": 18, "MATH-AP-PRECALC": 3},
+    10: {"MATH-ALG1": 2, "MATH-GEOM": 17, "MATH-ALG2": 24, "MATH-ALG2-H": 17, "MATH-PRECALC": 2, "MATH-AP-PRECALC": 11, "MATH-AP-CALC-AB": 3},
+    11: {"MATH-GEOM": 5, "MATH-ALG2": 11, "MATH-ALG2-H": 8, "MATH-PRECALC": 7, "MATH-AP-PRECALC": 8, "MATH-AP-CALC-AB": 20, "MATH-AP-CALC-BC": 4},
+    12: {"MATH-PRECALC": 7, "MATH-AP-PRECALC": 7, "MATH-AP-CALC-AB": 26, "MATH-AP-CALC-BC": 19},
+}
+
 CANVAS_SECTIONS = ("Section A", "Section B", "Section C", "Section D")
 
-# Public-safe summary anchors for present-student Assignment 01 generation.
+# Public-safe summary anchors for present-student beginning-of-year score generation.
 # These are generalized calibration parameters, not raw private scores.
 ASSIGNMENT_01_SCORE_ANCHORS = {
     9: [(0.00, 7.0), (0.10, 18.0), (0.25, 29.0), (0.50, 42.0), (0.75, 56.0), (0.90, 70.0), (1.00, 90.0)],
@@ -100,47 +112,23 @@ COURSES = (
     {"course_id": "MATH-AP-PRECALC", "course_name": "AP Precalculus", "track": "ap", "sequence_order": 4, "current_year_eligible": True},
     {"course_id": "MATH-AP-CALC-AB", "course_name": "AP Calculus AB", "track": "ap", "sequence_order": 5, "current_year_eligible": True},
     {"course_id": "MATH-AP-CALC-BC", "course_name": "AP Calculus BC", "track": "ap", "sequence_order": 5, "current_year_eligible": True},
-    {"course_id": "MATH-BEYOND-CORE", "course_name": "Beyond Core Math Sequence", "track": "beyond_core", "sequence_order": 6, "current_year_eligible": False},
-)
-
-GRADE_COURSE_COUNTS = {
-    9: {"MATH-ALG1": 19, "MATH-GEOM": 49, "MATH-ALG2-H": 18, "MATH-AP-PRECALC": 3},
-    10: {"MATH-ALG1": 2, "MATH-GEOM": 17, "MATH-ALG2": 24, "MATH-ALG2-H": 17, "MATH-PRECALC": 2, "MATH-AP-PRECALC": 11, "MATH-AP-CALC-AB": 3},
-    11: {"MATH-GEOM": 5, "MATH-ALG2": 11, "MATH-ALG2-H": 8, "MATH-PRECALC": 7, "MATH-AP-PRECALC": 8, "MATH-AP-CALC-AB": 20, "MATH-AP-CALC-BC": 4},
-    12: {"MATH-PRECALC": 7, "MATH-AP-PRECALC": 7, "MATH-AP-CALC-AB": 26, "MATH-AP-CALC-BC": 19},
-}
-
-SECTION_PLAN = (
-    ("MATH-ALG1", 11, "TCH-001"),
-    ("MATH-ALG1", 10, "TCH-001"),
-    ("MATH-GEOM", 12, "TCH-001"),
-    ("MATH-GEOM", 12, "TCH-001"),
-    ("MATH-GEOM", 12, "TCH-001"),
-    ("MATH-GEOM", 12, "TCH-002"),
-    ("MATH-GEOM", 12, "TCH-002"),
-    ("MATH-GEOM", 11, "TCH-002"),
-    ("MATH-ALG2", 18, "TCH-002"),
-    ("MATH-ALG2", 17, "TCH-002"),
-    ("MATH-ALG2-H", 11, "TCH-003"),
-    ("MATH-ALG2-H", 11, "TCH-003"),
-    ("MATH-ALG2-H", 11, "TCH-003"),
-    ("MATH-ALG2-H", 10, "TCH-003"),
-    ("MATH-PRECALC", 8, "TCH-003"),
-    ("MATH-PRECALC", 8, "TCH-004"),
-    ("MATH-AP-PRECALC", 10, "TCH-004"),
-    ("MATH-AP-PRECALC", 10, "TCH-004"),
-    ("MATH-AP-PRECALC", 9, "TCH-004"),
-    ("MATH-AP-CALC-AB", 13, "TCH-004"),
-    ("MATH-AP-CALC-AB", 12, "TCH-005"),
-    ("MATH-AP-CALC-AB", 12, "TCH-005"),
-    ("MATH-AP-CALC-AB", 12, "TCH-005"),
-    ("MATH-AP-CALC-BC", 12, "TCH-005"),
-    ("MATH-AP-CALC-BC", 11, "TCH-005"),
+    {"course_id": "MATH-BEYOND-CORE", "course_name": "Beyond Core Math Sequence", "track": "beyond_core", "sequence_order": 6, "current_year_eligible": True},
 )
 
 TEACHER_GROWTH_EFFECTS = {"TCH-001": -0.25, "TCH-002": 0.10, "TCH-003": 0.20, "TCH-004": -0.10, "TCH-005": 0.05}
+TEACHER_COURSE_PREFERENCES = {
+    "MATH-ALG1": ("TCH-001",),
+    "MATH-GEOM": ("TCH-001", "TCH-002"),
+    "MATH-ALG2": ("TCH-002",),
+    "MATH-ALG2-H": ("TCH-003",),
+    "MATH-PRECALC": ("TCH-003", "TCH-004"),
+    "MATH-AP-PRECALC": ("TCH-004",),
+    "MATH-AP-CALC-AB": ("TCH-004", "TCH-005"),
+    "MATH-AP-CALC-BC": ("TCH-005",),
+    "MATH-BEYOND-CORE": ("TCH-005", "TCH-004"),
+}
 
-LONGITUDINAL_MODEL_VERSION = "longitudinal_score_engine_v1"
+LONGITUDINAL_MODEL_VERSION = "longitudinal_score_engine_v3"
 GRADE_PRIOR_SHIFT_PER_GRADE = 1.7953
 READINESS_PRIOR_BASE_GRADE_9 = 45.0
 READINESS_PRIOR_SD = 14.0
@@ -157,12 +145,16 @@ TRACK_GROWTH_EFFECTS = {"regular": 0.0, "honors": 0.50, "ap": 0.25, "beyond_core
 
 @dataclass(frozen=True)
 class AssessmentContext:
+    school_year: str
+    school_year_offset: int
     assignment_label: str
+    sequence_index: int
     assessment_window: str
-    transition_type: str
+    expected_transition_type: str
     grade_level: int
     course_id: str
     course_track: str
+    section_id: str
     teacher_id: str
     instructor_effect: float
     section_effect: float
@@ -171,28 +163,54 @@ class AssessmentContext:
 @dataclass(frozen=True)
 class AssessmentResult:
     observed_score: float
-    potential_score: float
+    potential_score: float | None
     present: bool
     generation_mode: str
-    transition_type: str
-    posterior_readiness: float | None
+    actual_transition_type: str
+    posterior_readiness_after: float | None
     growth_delta: float | None
+    latent_transition_type: str
+    latent_readiness_before: float | None
+    latent_readiness_after: float
+    latent_transition_delta: float | None
+    academic_profile_status: str
+
+
+def school_year_for_offset(offset: int) -> str:
+    return f"{BASE_START_YEAR + offset}-{BASE_START_YEAR + offset + 1}"
+
+
+def school_year_end(offset: int) -> int:
+    return BASE_START_YEAR + offset + 1
+
+
+def assignment_label_for_sequence(sequence_index: int) -> str:
+    return f"Assignment {sequence_index:02d}"
+
+
+def grade_for_graduation_year(graduation_year: int, school_year_offset: int) -> int:
+    return 12 - (graduation_year - school_year_end(school_year_offset))
+
+
+def active_in_year(student: dict[str, Any], school_year_offset: int) -> bool:
+    grade = grade_for_graduation_year(int(student["graduation_year"]), school_year_offset)
+    return 9 <= grade <= 12 and int(student["entry_school_year_offset"]) <= school_year_offset
 
 
 def clamp(value: float, low: float, high: float) -> float:
     return min(high, max(low, value))
 
 
-def build_grade_level_sequence() -> tuple[int, ...]:
-    grades = [grade for grade, count in GRADE_COUNTS.items() for _ in range(count)]
-    if len(grades) != ROW_COUNT:
-        raise ValueError(f"Grade counts produce {len(grades)} rows, expected {ROW_COUNT}.")
+def build_initial_grade_level_sequence() -> tuple[int, ...]:
+    grades = [grade for grade, count in INITIAL_GRADE_COUNTS.items() for _ in range(count)]
+    if len(grades) != ACTIVE_STUDENT_COUNT:
+        raise ValueError(f"Initial grade counts produce {len(grades)} rows, expected {ACTIVE_STUDENT_COUNT}.")
     rng = random.Random(SEED + 17)
     rng.shuffle(grades)
     return tuple(grades)
 
 
-GRADE_LEVEL_SEQUENCE = build_grade_level_sequence()
+INITIAL_GRADE_LEVEL_SEQUENCE = build_initial_grade_level_sequence()
 
 
 def interpolate_anchor_score(anchors: list[tuple[float, float]], probability: float) -> float:
@@ -209,7 +227,7 @@ def interpolate_anchor_score(anchors: list[tuple[float, float]], probability: fl
     return anchors[-1][1]
 
 
-def draw_present_assignment_01_score(rng: random.Random, grade_level: int) -> float:
+def draw_present_beginning_score(rng: random.Random, grade_level: int) -> float:
     anchors = ASSIGNMENT_01_SCORE_ANCHORS[grade_level]
     draw = rng.random()
     base_score = interpolate_anchor_score(anchors, draw)
@@ -229,22 +247,6 @@ def choose_attendance_category(rng: random.Random) -> tuple[str, tuple[int, int]
             return name, beta_params
     name, _probability, beta_params = ATTENDANCE_CATEGORIES[-1]
     return name, beta_params
-
-
-def assignment_01_outcome(rng: random.Random, grade_level: int) -> tuple[float, dict[str, str | float | bool | int]]:
-    potential_score = draw_present_assignment_01_score(rng, grade_level)
-    category, beta_params = choose_attendance_category(rng)
-    attendance_probability = rng.betavariate(*beta_params)
-    present = rng.random() < attendance_probability
-    observed_score = potential_score if present else 0.0
-    return observed_score, {
-        "grade_level": grade_level,
-        "potential_assignment_01_score": potential_score,
-        "attendance_category": category,
-        "attendance_probability": round(attendance_probability, 4),
-        "present_assignment_01": present,
-        "assignment_01_score": observed_score,
-    }
 
 
 def readiness_prior_mean(grade_level: int, course_track: str) -> float:
@@ -279,70 +281,118 @@ def transition_growth(rng: random.Random, posterior_readiness: float, context: A
     )
 
 
-def end_of_year_first_evidence_score(rng: random.Random, context: AssessmentContext) -> float:
-    baseline_score = draw_present_assignment_01_score(rng, context.grade_level)
-    baseline_readiness = bayesian_readiness_update(readiness_prior_mean(context.grade_level, context.course_track), baseline_score)
-    growth = transition_growth(rng, baseline_readiness, context)
-    potential_score = baseline_readiness + growth + rng.gauss(0, OBSERVATION_NOISE_SD)
-    return round(clamp(potential_score, 0.0, 100.0), 2)
+def summer_atrophy_loss(rng: random.Random, posterior_readiness: float, context: AssessmentContext) -> float:
+    readiness_adjustment = clamp((58.0 - posterior_readiness) * 0.045, -1.1, 1.8)
+    track_adjustment = {"regular": 0.0, "honors": -0.35, "ap": -0.55, "beyond_core": -0.70}[context.course_track]
+    loss = 2.4 + readiness_adjustment + track_adjustment + rng.gauss(0, 1.1)
+    return clamp(loss, 0.0, 7.0)
 
 
-def generate_next_assessment_score(
+def initialize_latent_readiness(rng: random.Random, context: AssessmentContext) -> float:
+    score = draw_present_beginning_score(rng, context.grade_level)
+    score += TRACK_READINESS_EFFECTS[context.course_track] * 0.30
+    if context.assessment_window == "end_of_year":
+        score += GRADE_BASE_GROWTH[context.grade_level] * 0.85
+        score += TRACK_GROWTH_EFFECTS[context.course_track]
+        score += context.instructor_effect + context.section_effect
+    return round(clamp(score, 1.0, 100.0), 4)
+
+
+def evolve_latent_readiness(
     rng: random.Random,
-    student_profile: dict[str, str | float | bool | int],
-    previous_present_score: float | None,
+    previous_latent_readiness: float | None,
     context: AssessmentContext,
-) -> AssessmentResult:
-    attendance_probability = float(student_profile["attendance_probability"])
-    present = rng.random() < attendance_probability
+) -> tuple[float | None, float, float | None, str]:
+    if previous_latent_readiness is None:
+        latent_after = initialize_latent_readiness(rng, context)
+        return None, latent_after, None, "initialize_latent_readiness"
 
-    if not present:
-        return AssessmentResult(
-            observed_score=0.0,
-            potential_score=0.0,
-            present=False,
-            generation_mode="absent_no_update",
-            transition_type="absent_no_update",
-            posterior_readiness=None,
-            growth_delta=None,
-        )
+    if context.expected_transition_type == "summer_atrophy":
+        loss = summer_atrophy_loss(rng, previous_latent_readiness, context)
+        latent_after = round(clamp(previous_latent_readiness - loss, 1.0, 100.0), 4)
+        transition_type = "summer_atrophy"
+    else:
+        growth = transition_growth(rng, previous_latent_readiness, context)
+        latent_after = round(clamp(previous_latent_readiness + growth, 1.0, 100.0), 4)
+        transition_type = "school_year_growth"
 
-    prior_mean = readiness_prior_mean(context.grade_level, context.course_track)
-    if previous_present_score is None:
-        potential_score = end_of_year_first_evidence_score(rng, context)
-        posterior_readiness = bayesian_readiness_update(prior_mean, potential_score)
-        return AssessmentResult(
-            observed_score=potential_score,
-            potential_score=potential_score,
-            present=True,
-            generation_mode="first_evidence_assignment_02",
-            transition_type="initialize_readiness",
-            posterior_readiness=round(posterior_readiness, 4),
-            growth_delta=None,
-        )
-
-    posterior_readiness = bayesian_readiness_update(prior_mean, previous_present_score)
-    growth = transition_growth(rng, posterior_readiness, context)
-    potential_score = round(clamp(posterior_readiness + growth + rng.gauss(0, OBSERVATION_NOISE_SD), 0.0, 100.0), 2)
-    return AssessmentResult(
-        observed_score=potential_score,
-        potential_score=potential_score,
-        present=True,
-        generation_mode="growth_from_assignment_01",
-        transition_type=context.transition_type,
-        posterior_readiness=round(bayesian_readiness_update(prior_mean, potential_score), 4),
-        growth_delta=round(potential_score - previous_present_score, 4),
+    return (
+        round(previous_latent_readiness, 4),
+        latent_after,
+        round(latent_after - previous_latent_readiness, 4),
+        transition_type,
     )
 
 
-def class_size_band(size: int) -> str:
-    if 7 <= size <= 12:
-        return "small"
-    if 13 <= size <= 18:
-        return "standard"
-    if 19 <= size <= 24:
-        return "large"
-    raise ValueError(f"Section target enrollment {size} is outside configured class-size bands.")
+def observed_readiness_prior_mean(previous_observed_readiness: float | None, context: AssessmentContext) -> float:
+    context_prior = readiness_prior_mean(context.grade_level, context.course_track)
+    if previous_observed_readiness is None:
+        return context_prior
+    return (previous_observed_readiness * 0.85) + (context_prior * 0.15)
+
+
+def generate_assessment_score(
+    rng: random.Random,
+    student: dict[str, Any],
+    previous_latent_readiness: float | None,
+    previous_observed_readiness: float | None,
+    previous_present_score: float | None,
+    context: AssessmentContext,
+) -> tuple[AssessmentResult, float, float | None, float | None]:
+    attendance_probability = float(student["attendance_probability"])
+    latent_before, latent_after, latent_delta, latent_transition_type = evolve_latent_readiness(
+        rng,
+        previous_latent_readiness,
+        context,
+    )
+    present = rng.random() < attendance_probability
+
+    if not present:
+        status = "pending_no_present_scores" if previous_observed_readiness is None else "observed_readiness_unchanged_absent"
+        result = AssessmentResult(
+            observed_score=0.0,
+            potential_score=None,
+            present=False,
+            generation_mode="absent_no_update",
+            actual_transition_type="absent_no_update",
+            posterior_readiness_after=None,
+            growth_delta=None,
+            latent_transition_type=latent_transition_type,
+            latent_readiness_before=latent_before,
+            latent_readiness_after=latent_after,
+            latent_transition_delta=latent_delta,
+            academic_profile_status=status,
+        )
+        return result, latent_after, previous_observed_readiness, previous_present_score
+
+    observed_score = round(clamp(latent_after + rng.gauss(0, OBSERVATION_NOISE_SD), 1.0, 100.0), 2)
+    prior_mean = observed_readiness_prior_mean(previous_observed_readiness, context)
+    posterior_readiness = bayesian_readiness_update(prior_mean, observed_score)
+    if previous_observed_readiness is None:
+        actual_transition_type = "initialize_readiness"
+        generation_mode = "first_present_evidence_from_latent"
+        academic_profile_status = f"initialized_{context.assignment_label.lower().replace(' ', '_')}"
+    else:
+        actual_transition_type = latent_transition_type
+        generation_mode = f"{latent_transition_type}_from_latent_readiness"
+        academic_profile_status = f"updated_{context.assignment_label.lower().replace(' ', '_')}"
+
+    growth_delta = None if previous_present_score is None else round(observed_score - previous_present_score, 4)
+    result = AssessmentResult(
+        observed_score=observed_score,
+        potential_score=round(latent_after, 2),
+        present=True,
+        generation_mode=generation_mode,
+        actual_transition_type=actual_transition_type,
+        posterior_readiness_after=round(posterior_readiness, 4),
+        growth_delta=growth_delta,
+        latent_transition_type=latent_transition_type,
+        latent_readiness_before=latent_before,
+        latent_readiness_after=latent_after,
+        latent_transition_delta=latent_delta,
+        academic_profile_status=academic_profile_status,
+    )
+    return result, latent_after, posterior_readiness, observed_score
 
 
 def teacher_label(teacher_id: str) -> str:
@@ -350,105 +400,250 @@ def teacher_label(teacher_id: str) -> str:
     return f"Teacher {number:02d}"
 
 
+def class_size_band(size: int) -> str:
+    if size <= 6:
+        return "micro"
+    if 7 <= size <= 12:
+        return "small"
+    if 13 <= size <= 18:
+        return "standard"
+    return "large"
+
+
 def section_growth_effect(section_index: int) -> float:
     pattern = (-0.30, -0.20, -0.10, 0.00, 0.10, 0.20, 0.30)
     return pattern[(section_index - 1) % len(pattern)]
 
 
-def synthetic_student_profile(idx: int) -> tuple[str, str, str, str]:
+def synthetic_student_names(idx: int) -> tuple[str, str]:
     first_name = FIRST_NAMES[(idx - 1) % len(FIRST_NAMES)]
     last_name = LAST_NAMES[((idx - 1) // len(FIRST_NAMES) + idx - 1) % len(LAST_NAMES)]
-    graduation_year = GRADUATION_YEAR_BY_GRADE[GRADE_LEVEL_SEQUENCE[idx - 1]]
-    section = CANVAS_SECTIONS[(idx - 1) % len(CANVAS_SECTIONS)]
-    return first_name, last_name, graduation_year, section
+    return first_name, last_name
 
 
-def build_teacher_rows() -> list[dict[str, str | int | float]]:
-    return [
-        {
-            "school_year": SCHOOL_YEAR,
-            "teacher_id": teacher_id,
-            "teacher_label": teacher_label(teacher_id),
-            "target_section_load": 5,
-            "teacher_growth_effect": effect,
-        }
-        for teacher_id, effect in sorted(TEACHER_GROWTH_EFFECTS.items())
-    ]
+def build_student(idx: int, graduation_year: int, entry_school_year_offset: int, rng: random.Random) -> dict[str, Any]:
+    first_name, last_name = synthetic_student_names(idx)
+    attendance_category, beta_params = choose_attendance_category(rng)
+    attendance_probability = rng.betavariate(*beta_params)
+    graduation_suffix = f"{graduation_year % 100:02d}"
+    exit_offset = graduation_year - (BASE_START_YEAR + 1)
+    return {
+        "student_key": f"SYN-SIS-{idx:06d}",
+        "student_label": f"Synthetic Student {idx:03d}",
+        "export_id": f"SYN-EXP-{idx:06d}",
+        "login_id": f"synthetic{idx:03d}",
+        "email": f"{first_name[0].lower()}{last_name.lower()}{graduation_suffix}@{SYNTHETIC_EMAIL_DOMAIN}",
+        "canvas_gradebook_section": CANVAS_SECTIONS[(idx - 1) % len(CANVAS_SECTIONS)],
+        "graduation_year": graduation_year,
+        "graduation_year_suffix": graduation_suffix,
+        "cohort_label": f"class_of_{graduation_year}",
+        "entry_school_year_offset": entry_school_year_offset,
+        "entry_school_year": school_year_for_offset(entry_school_year_offset),
+        "graduation_school_year_offset": exit_offset,
+        "graduation_school_year": school_year_for_offset(exit_offset) if 0 <= exit_offset < SCHOOL_YEAR_COUNT else None,
+        "attendance_category": attendance_category,
+        "attendance_probability": round(attendance_probability, 4),
+    }
+
+
+def generate_students() -> list[dict[str, Any]]:
+    rng = random.Random(SEED)
+    students: list[dict[str, Any]] = []
+    next_idx = 1
+
+    for grade_level in INITIAL_GRADE_LEVEL_SEQUENCE:
+        graduation_year = school_year_end(0) + (12 - grade_level)
+        students.append(build_student(next_idx, graduation_year, 0, rng))
+        next_idx += 1
+
+    for offset in range(1, SCHOOL_YEAR_COUNT):
+        graduating_count = sum(
+            1
+            for student in students
+            if active_in_year(student, offset - 1)
+            and grade_for_graduation_year(int(student["graduation_year"]), offset - 1) == 12
+        )
+        freshman_graduation_year = school_year_end(offset) + 3
+        for _ in range(graduating_count):
+            students.append(build_student(next_idx, freshman_graduation_year, offset, rng))
+            next_idx += 1
+
+    return students
+
+
+def active_students_for_year(students: list[dict[str, Any]], offset: int) -> list[dict[str, Any]]:
+    return [student for student in students if active_in_year(student, offset)]
+
+
+def apportion_counts(source_counts: dict[str, int], target_count: int) -> dict[str, int]:
+    source_total = sum(source_counts.values())
+    raw_allocations = {
+        course_id: (count / source_total) * target_count
+        for course_id, count in source_counts.items()
+    }
+    allocations = {course_id: int(math.floor(value)) for course_id, value in raw_allocations.items()}
+    remaining = target_count - sum(allocations.values())
+    remainders = sorted(raw_allocations.items(), key=lambda item: item[1] - math.floor(item[1]), reverse=True)
+    for course_id, _value in remainders[:remaining]:
+        allocations[course_id] += 1
+    return allocations
+
+
+def assign_initial_courses(students: list[dict[str, Any]]) -> dict[str, str]:
+    rng = random.Random(SEED + 31)
+    assignments: dict[str, str] = {}
+    students_by_grade: dict[int, list[dict[str, Any]]] = defaultdict(list)
+    for student in students:
+        grade = grade_for_graduation_year(int(student["graduation_year"]), 0)
+        students_by_grade[grade].append(student)
+
+    for grade, course_counts in INITIAL_GRADE_COURSE_COUNTS.items():
+        grade_students = students_by_grade[grade]
+        if len(grade_students) != sum(course_counts.values()):
+            raise ValueError(f"Grade {grade} initial course counts do not match active students.")
+        rng.shuffle(grade_students)
+        cursor = 0
+        for course_id, count in course_counts.items():
+            for student in grade_students[cursor : cursor + count]:
+                assignments[student["student_key"]] = course_id
+            cursor += count
+    return assignments
+
+
+def assign_new_freshman_courses(students: list[dict[str, Any]], rng: random.Random) -> dict[str, str]:
+    assignments: dict[str, str] = {}
+    course_counts = apportion_counts(INITIAL_GRADE_COURSE_COUNTS[9], len(students))
+    shuffled = list(students)
+    rng.shuffle(shuffled)
+    cursor = 0
+    for course_id, count in course_counts.items():
+        for student in shuffled[cursor : cursor + count]:
+            assignments[student["student_key"]] = course_id
+        cursor += count
+    return assignments
+
+
+def promote_course(previous_course_id: str, readiness: float | None, rng: random.Random) -> str:
+    readiness_value = readiness if readiness is not None else 52.0 + rng.gauss(0, 8.0)
+    if previous_course_id == "MATH-ALG1":
+        return "MATH-GEOM"
+    if previous_course_id == "MATH-GEOM":
+        return "MATH-ALG2-H" if readiness_value >= 58.0 else "MATH-ALG2"
+    if previous_course_id == "MATH-ALG2":
+        return "MATH-PRECALC"
+    if previous_course_id == "MATH-ALG2-H":
+        return "MATH-AP-PRECALC"
+    if previous_course_id == "MATH-PRECALC":
+        return "MATH-AP-CALC-AB"
+    if previous_course_id == "MATH-AP-PRECALC":
+        return "MATH-AP-CALC-BC" if readiness_value >= 78.0 else "MATH-AP-CALC-AB"
+    if previous_course_id == "MATH-AP-CALC-AB":
+        return "MATH-AP-CALC-BC"
+    return "MATH-BEYOND-CORE"
+
+
+def split_section_sizes(student_count: int) -> list[int]:
+    if student_count <= 0:
+        return []
+    section_count = max(1, math.ceil(student_count / 14))
+    base_size = student_count // section_count
+    extras = student_count % section_count
+    return [base_size + (1 if idx < extras else 0) for idx in range(section_count)]
+
+
+def choose_teacher(course_id: str, teacher_loads: dict[str, int]) -> str:
+    preferred = TEACHER_COURSE_PREFERENCES[course_id]
+    under_target = [teacher_id for teacher_id in preferred if teacher_loads[teacher_id] < 5]
+    if under_target:
+        return min(under_target, key=lambda teacher_id: (teacher_loads[teacher_id], preferred.index(teacher_id)))
+    under_rare_load = [teacher_id for teacher_id in preferred if teacher_loads[teacher_id] < 6]
+    if under_rare_load:
+        return min(under_rare_load, key=lambda teacher_id: (teacher_loads[teacher_id], preferred.index(teacher_id)))
+    return min(teacher_loads, key=lambda teacher_id: (teacher_loads[teacher_id], teacher_id))
 
 
 def build_course_rows() -> list[dict[str, str | int | bool]]:
     return [dict(course) for course in COURSES]
 
 
-def build_section_rows() -> list[dict[str, str | int | float]]:
-    course_lookup = {course["course_id"]: course["course_name"] for course in COURSES}
+def build_teacher_rows() -> list[dict[str, str | int | float]]:
     rows = []
-    for idx, (course_id, target_enrollment, teacher_id) in enumerate(SECTION_PLAN, start=1):
-        rows.append(
-            {
-                "school_year": SCHOOL_YEAR,
-                "section_id": f"SEC-{idx:03d}",
-                "course_id": course_id,
-                "section_label": f"{course_lookup[course_id]} - Synthetic Section {idx:02d}",
-                "teacher_id": teacher_id,
-                "teacher_label": teacher_label(teacher_id),
-                "period_label": f"Period {((idx - 1) % 6) + 1}",
-                "target_enrollment": target_enrollment,
-                "max_capacity": {"small": 12, "standard": 18, "large": 24}[class_size_band(target_enrollment)],
-                "class_size_band": class_size_band(target_enrollment),
-                "section_growth_effect": section_growth_effect(idx),
-                "teacher_growth_effect": TEACHER_GROWTH_EFFECTS[teacher_id],
-            }
-        )
+    for offset in range(SCHOOL_YEAR_COUNT):
+        school_year = school_year_for_offset(offset)
+        for teacher_id, effect in sorted(TEACHER_GROWTH_EFFECTS.items()):
+            rows.append(
+                {
+                    "school_year": school_year,
+                    "teacher_id": teacher_id,
+                    "teacher_label": teacher_label(teacher_id),
+                    "target_section_load": 5,
+                    "teacher_growth_effect": effect,
+                }
+            )
     return rows
 
 
-def infer_grade_from_email(email: str) -> int:
-    graduation_year = email.strip().split("@", 1)[0][-2:]
-    if graduation_year not in GRADE_BY_GRADUATION_YEAR:
-        raise ValueError(f"Could not infer grade from synthetic email: {email}")
-    return GRADE_BY_GRADUATION_YEAR[graduation_year]
+def build_sections_for_year(
+    school_year_offset: int,
+    course_assignments: dict[str, str],
+) -> list[dict[str, str | int | float]]:
+    school_year = school_year_for_offset(school_year_offset)
+    course_lookup = {course["course_id"]: course for course in COURSES}
+    course_counts = Counter(course_assignments.values())
+    teacher_loads = {teacher_id: 0 for teacher_id in TEACHER_GROWTH_EFFECTS}
+    rows: list[dict[str, str | int | float]] = []
+    local_section_index = 1
+
+    for course in sorted(COURSES, key=lambda row: (row["sequence_order"], row["course_id"])):
+        course_id = str(course["course_id"])
+        for section_size in split_section_sizes(course_counts[course_id]):
+            teacher_id = choose_teacher(course_id, teacher_loads)
+            teacher_loads[teacher_id] += 1
+            section_id = f"Y{school_year_offset:02d}-SEC-{local_section_index:03d}"
+            band = class_size_band(section_size)
+            rows.append(
+                {
+                    "school_year": school_year,
+                    "school_year_offset": school_year_offset,
+                    "section_id": section_id,
+                    "course_id": course_id,
+                    "section_label": f"{course_lookup[course_id]['course_name']} - Synthetic Section {school_year_offset + 1:02d}-{local_section_index:02d}",
+                    "teacher_id": teacher_id,
+                    "teacher_label": teacher_label(teacher_id),
+                    "period_label": f"Period {((teacher_loads[teacher_id] - 1) % 6) + 1}",
+                    "target_enrollment": section_size,
+                    "max_capacity": {"micro": 6, "small": 12, "standard": 18, "large": 24}[band],
+                    "class_size_band": band,
+                    "section_growth_effect": section_growth_effect(local_section_index),
+                    "teacher_growth_effect": TEACHER_GROWTH_EFFECTS[teacher_id],
+                }
+            )
+            local_section_index += 1
+    return rows
 
 
-def assign_courses_to_students(rows: list[dict[str, str]]) -> dict[str, str]:
-    rng = random.Random(SEED + 31)
-    students_by_grade: dict[int, list[dict[str, str]]] = {grade: [] for grade in GRADE_COUNTS}
-    for row in rows:
-        students_by_grade[infer_grade_from_email(row["Email"])].append(row)
+def build_enrollments_for_year(
+    school_year_offset: int,
+    active_students: list[dict[str, Any]],
+    course_assignments: dict[str, str],
+    section_rows: list[dict[str, str | int | float]],
+) -> list[dict[str, str | int]]:
+    rng = random.Random(SEED + 43 + school_year_offset)
+    school_year = school_year_for_offset(school_year_offset)
+    students_by_course: dict[str, list[dict[str, Any]]] = defaultdict(list)
+    for student in active_students:
+        students_by_course[course_assignments[student["student_key"]]].append(student)
 
-    student_course: dict[str, str] = {}
-    for grade, expected_count in GRADE_COUNTS.items():
-        students = students_by_grade[grade]
-        if len(students) != expected_count:
-            raise ValueError(f"Grade {grade} has {len(students)} students, expected {expected_count}.")
-        rng.shuffle(students)
-        cursor = 0
-        for course_id, count in GRADE_COURSE_COUNTS[grade].items():
-            for student in students[cursor : cursor + count]:
-                student_course[student["SIS User ID"]] = course_id
-            cursor += count
-        if cursor != len(students):
-            raise ValueError(f"Grade {grade} course counts assigned {cursor} students, expected {len(students)}.")
-    return student_course
-
-
-def build_enrollment_rows(rows: list[dict[str, str]], section_rows: list[dict[str, str | int | float]]) -> list[dict[str, str | int]]:
-    rng = random.Random(SEED + 43)
-    student_course = assign_courses_to_students(rows)
-    students_by_course: dict[str, list[dict[str, str]]] = {}
-    for row in rows:
-        students_by_course.setdefault(student_course[row["SIS User ID"]], []).append(row)
-
-    sections_by_course: dict[str, list[dict[str, str | int | float]]] = {}
+    sections_by_course: dict[str, list[dict[str, str | int | float]]] = defaultdict(list)
     for section in section_rows:
-        sections_by_course.setdefault(str(section["course_id"]), []).append(section)
+        sections_by_course[str(section["course_id"])].append(section)
 
     enrollment_rows = []
     for course_id, students in sorted(students_by_course.items()):
-        sections = sections_by_course.get(course_id, [])
+        sections = sections_by_course[course_id]
         target_total = sum(int(section["target_enrollment"]) for section in sections)
         if target_total != len(students):
-            raise ValueError(f"{course_id} has {len(students)} students but section targets sum to {target_total}.")
+            raise ValueError(f"{school_year} {course_id} has {len(students)} students but section targets sum to {target_total}.")
         rng.shuffle(students)
         cursor = 0
         for section in sections:
@@ -456,10 +651,11 @@ def build_enrollment_rows(rows: list[dict[str, str]], section_rows: list[dict[st
             for student in students[cursor : cursor + section_size]:
                 enrollment_rows.append(
                     {
-                        "school_year": SCHOOL_YEAR,
-                        "Student": student["Student"],
-                        "SIS User ID": student["SIS User ID"],
-                        "grade_level": infer_grade_from_email(student["Email"]),
+                        "school_year": school_year,
+                        "school_year_offset": school_year_offset,
+                        "Student": student["student_label"],
+                        "SIS User ID": student["student_key"],
+                        "grade_level": grade_for_graduation_year(int(student["graduation_year"]), school_year_offset),
                         "course_id": course_id,
                         "section_id": section["section_id"],
                         "teacher_id": section["teacher_id"],
@@ -473,126 +669,52 @@ def build_enrollment_rows(rows: list[dict[str, str]], section_rows: list[dict[st
 def build_assignment_definitions() -> list[dict[str, str | int]]:
     assignments = []
     for idx in range(1, ASSIGNMENT_COUNT + 1):
+        school_year_offset = (idx - 1) // 2
+        assessment_window = "beginning_of_year" if idx % 2 == 1 else "end_of_year"
         transition_type = "initialize_readiness" if idx == 1 else "school_year_growth" if idx % 2 == 0 else "summer_atrophy"
         assignments.append(
             {
-                "assignment_label": f"Assignment {idx:02d}",
+                "assignment_label": assignment_label_for_sequence(idx),
                 "sequence_index": idx,
-                "school_year_offset": (idx - 1) // 2,
-                "assessment_window": "beginning_of_year" if idx % 2 == 1 else "end_of_year",
+                "school_year": school_year_for_offset(school_year_offset),
+                "school_year_offset": school_year_offset,
+                "assessment_window": assessment_window,
                 "transition_type": transition_type,
-                "population_status": "populated" if idx <= 2 else "pending_rules",
+                "population_status": "populated",
             }
         )
     return assignments
 
 
-def build_assessment_context(
-    row: dict[str, str],
+def assessment_context_from_enrollment(
+    assignment: dict[str, str | int],
+    enrollment: dict[str, str | int],
     course_rows: list[dict[str, str | int | bool]],
     section_rows: list[dict[str, str | int | float]],
-    enrollment_rows: list[dict[str, str | int]],
 ) -> AssessmentContext:
     course_by_id = {str(course["course_id"]): course for course in course_rows}
-    section_by_id = {str(section["section_id"]): section for section in section_rows}
-    enrollment_by_student_id = {str(enrollment["SIS User ID"]): enrollment for enrollment in enrollment_rows}
-    enrollment = enrollment_by_student_id[row["SIS User ID"]]
-    section = section_by_id[str(enrollment["section_id"])]
+    section_by_key = {
+        (str(section["school_year"]), str(section["section_id"])): section
+        for section in section_rows
+    }
+    school_year = str(enrollment["school_year"])
+    section = section_by_key[(school_year, str(enrollment["section_id"]))]
     course = course_by_id[str(enrollment["course_id"])]
     return AssessmentContext(
-        assignment_label="Assignment 02",
-        assessment_window="end_of_year",
-        transition_type="school_year_growth",
+        school_year=school_year,
+        school_year_offset=int(assignment["school_year_offset"]),
+        assignment_label=str(assignment["assignment_label"]),
+        sequence_index=int(assignment["sequence_index"]),
+        assessment_window=str(assignment["assessment_window"]),
+        expected_transition_type=str(assignment["transition_type"]),
         grade_level=int(enrollment["grade_level"]),
         course_id=str(enrollment["course_id"]),
         course_track=str(course["track"]),
+        section_id=str(enrollment["section_id"]),
         teacher_id=str(enrollment["teacher_id"]),
         instructor_effect=float(section["teacher_growth_effect"]),
         section_effect=float(section["section_growth_effect"]),
     )
-
-
-def populate_assignment_02(
-    rows: list[dict[str, str]],
-    assessment_profiles: dict[str, dict[str, str | float | bool | int | None]],
-    course_rows: list[dict[str, str | int | bool]],
-    section_rows: list[dict[str, str | int | float]],
-    enrollment_rows: list[dict[str, str | int]],
-) -> None:
-    rng = random.Random(SEED + 59)
-    for row in rows:
-        profile = assessment_profiles[row["SIS User ID"]]
-        context = build_assessment_context(row, course_rows, section_rows, enrollment_rows)
-        assignment_01_score = parse_score(row["Assignment 01"])
-        previous_present_score = assignment_01_score if bool(profile["present_assignment_01"]) else None
-        result = generate_next_assessment_score(rng, profile, previous_present_score, context)
-        row["Assignment 02"] = format_score(result.observed_score)
-        profile.update(
-            {
-                "assignment_02_score": result.observed_score,
-                "potential_assignment_02_score": result.potential_score,
-                "present_assignment_02": result.present,
-                "assignment_02_generation_mode": result.generation_mode,
-                "assignment_02_transition_type": result.transition_type,
-                "assignment_02_growth_delta": result.growth_delta,
-                "posterior_readiness_after_assignment_02": result.posterior_readiness,
-                "academic_profile_status": (
-                    "initialized_assignment_02"
-                    if result.generation_mode == "first_evidence_assignment_02"
-                    else "updated_assignment_02"
-                    if result.generation_mode == "growth_from_assignment_01"
-                    else "initialized_assignment_01"
-                    if previous_present_score is not None
-                    else "pending_no_present_scores"
-                ),
-                "assignment_02_course_id": context.course_id,
-                "assignment_02_course_track": context.course_track,
-                "assignment_02_teacher_id": context.teacher_id,
-                "assignment_02_window": context.assessment_window,
-            }
-        )
-
-
-def build_rows() -> tuple[
-    list[dict[str, str]],
-    list[dict[str, str | int | bool]],
-    list[dict[str, str | int | float]],
-    list[dict[str, str | int]],
-    dict[str, dict[str, str | float | bool | int | None]],
-]:
-    rng = random.Random(SEED)
-    rows = []
-    assessment_profiles: dict[str, dict[str, str | float | bool | int | None]] = {}
-    for idx in range(1, ROW_COUNT + 1):
-        first_name, last_name, graduation_year, canvas_section = synthetic_student_profile(idx)
-        grade_level = GRADE_BY_GRADUATION_YEAR[graduation_year]
-        assignment_score, assignment_profile = assignment_01_outcome(rng, grade_level)
-        row = {
-            "Student": f"Synthetic Student {idx:03d}",
-            "ID": f"SYN-EXP-{idx:06d}",
-            "SIS User ID": f"SYN-SIS-{idx:06d}",
-            "SIS Login ID": f"synthetic{idx:03d}",
-            "Email": f"{first_name[0].lower()}{last_name.lower()}{graduation_year}@schoolname.org",
-            "Section": canvas_section,
-            "Assignment 01": f"{assignment_score:g}",
-        }
-        for assignment_index in range(2, ASSIGNMENT_COUNT + 1):
-            row[f"Assignment {assignment_index:02d}"] = ""
-        rows.append(row)
-        assignment_profile["academic_profile_status"] = "initialized_assignment_01" if assignment_profile["present_assignment_01"] else "pending_no_present_scores"
-        assessment_profiles[row["SIS User ID"]] = assignment_profile
-
-    course_rows = build_course_rows()
-    section_rows = build_section_rows()
-    enrollment_rows = build_enrollment_rows(rows, section_rows)
-    populate_assignment_02(rows, assessment_profiles, course_rows, section_rows, enrollment_rows)
-    return rows, course_rows, section_rows, enrollment_rows, assessment_profiles
-
-
-def parse_score(value: str | float | int | None) -> float | None:
-    if value is None or value == "":
-        return None
-    return float(value)
 
 
 def format_score(value: float | int | str | None) -> str:
@@ -603,111 +725,284 @@ def format_score(value: float | int | str | None) -> str:
     return f"{value:g}"
 
 
-def build_synthetic_math_department_state(
-    rows: list[dict[str, str]],
-    course_rows: list[dict[str, str | int | bool]],
-    section_rows: list[dict[str, str | int | float]],
-    enrollment_rows: list[dict[str, str | int]],
-    assessment_profiles: dict[str, dict[str, str | float | bool | int | None]],
-) -> dict[str, Any]:
-    students = []
-    for row in rows:
-        grade_level = infer_grade_from_email(row["Email"])
-        assignment_scores = {
-            f"Assignment {idx:02d}": parse_score(row[f"Assignment {idx:02d}"])
-            for idx in range(1, ASSIGNMENT_COUNT + 1)
-            if parse_score(row[f"Assignment {idx:02d}"]) is not None
+def build_state_and_artifacts() -> dict[str, Any]:
+    students = generate_students()
+    course_rows = build_course_rows()
+    teacher_rows = build_teacher_rows()
+    assignments = build_assignment_definitions()
+
+    runtime: dict[str, dict[str, float | None]] = {
+        student["student_key"]: {"latent_readiness": None, "observed_readiness": None, "last_present_score": None}
+        for student in students
+    }
+    assignment_scores_by_student: dict[str, dict[str, float]] = defaultdict(dict)
+    assessment_history_by_student: dict[str, list[dict[str, Any]]] = defaultdict(list)
+    previous_course_by_student: dict[str, str] = {}
+    all_sections: list[dict[str, str | int | float]] = []
+    all_enrollments: list[dict[str, str | int]] = []
+    all_assessment_scores: list[dict[str, str | int | float | bool | None]] = []
+    school_year_records: list[dict[str, Any]] = []
+    rng = random.Random(SEED + 59)
+
+    for offset in range(SCHOOL_YEAR_COUNT):
+        school_year = school_year_for_offset(offset)
+        active_students = active_students_for_year(students, offset)
+        if len(active_students) != ACTIVE_STUDENT_COUNT:
+            raise ValueError(f"{school_year} has {len(active_students)} active students, expected {ACTIVE_STUDENT_COUNT}.")
+
+        if offset == 0:
+            course_assignments = assign_initial_courses(active_students)
+        else:
+            year_rng = random.Random(SEED + 71 + offset)
+            new_students = [student for student in active_students if int(student["entry_school_year_offset"]) == offset]
+            continuing_students = [student for student in active_students if int(student["entry_school_year_offset"]) < offset]
+            course_assignments = assign_new_freshman_courses(new_students, year_rng)
+            for student in continuing_students:
+                previous_course = previous_course_by_student[student["student_key"]]
+                latent_readiness = runtime[student["student_key"]]["latent_readiness"]
+                course_assignments[student["student_key"]] = promote_course(previous_course, latent_readiness, year_rng)
+
+        section_rows = build_sections_for_year(offset, course_assignments)
+        enrollment_rows = build_enrollments_for_year(offset, active_students, course_assignments, section_rows)
+        all_sections.extend(section_rows)
+        all_enrollments.extend(enrollment_rows)
+
+        enrollment_by_student = {str(enrollment["SIS User ID"]): enrollment for enrollment in enrollment_rows}
+        year_assignments = [assignment for assignment in assignments if int(assignment["school_year_offset"]) == offset]
+        for assignment in year_assignments:
+            for student in sorted(active_students, key=lambda row: str(row["student_key"])):
+                student_key = str(student["student_key"])
+                enrollment = enrollment_by_student[student_key]
+                context = assessment_context_from_enrollment(assignment, enrollment, course_rows, section_rows)
+                result, next_latent_readiness, next_observed_readiness, next_present_score = generate_assessment_score(
+                    rng,
+                    student,
+                    runtime[student_key]["latent_readiness"],
+                    runtime[student_key]["observed_readiness"],
+                    runtime[student_key]["last_present_score"],
+                    context,
+                )
+                runtime[student_key]["latent_readiness"] = next_latent_readiness
+                runtime[student_key]["observed_readiness"] = next_observed_readiness
+                runtime[student_key]["last_present_score"] = next_present_score
+                assignment_scores_by_student[student_key][context.assignment_label] = result.observed_score
+
+                score_row = {
+                    "school_year": context.school_year,
+                    "school_year_offset": context.school_year_offset,
+                    "assignment_label": context.assignment_label,
+                    "sequence_index": context.sequence_index,
+                    "assessment_window": context.assessment_window,
+                    "expected_transition_type": context.expected_transition_type,
+                    "actual_transition_type": result.actual_transition_type,
+                    "generation_mode": result.generation_mode,
+                    "sis_user_id": student_key,
+                    "student_label": student["student_label"],
+                    "grade_level": context.grade_level,
+                    "course_id": context.course_id,
+                    "course_track": context.course_track,
+                    "section_id": context.section_id,
+                    "teacher_id": context.teacher_id,
+                    "attendance_category": student["attendance_category"],
+                    "attendance_probability": student["attendance_probability"],
+                    "present": result.present,
+                    "observed_score": result.observed_score,
+                    "potential_score": result.potential_score,
+                    "posterior_readiness_after": result.posterior_readiness_after,
+                    "growth_delta": result.growth_delta,
+                    "latent_transition_type": result.latent_transition_type,
+                    "latent_readiness_before": result.latent_readiness_before,
+                    "latent_readiness_after": result.latent_readiness_after,
+                    "latent_transition_delta": result.latent_transition_delta,
+                    "academic_profile_status": result.academic_profile_status,
+                }
+                all_assessment_scores.append(score_row)
+                assessment_history_by_student[student_key].append(score_row)
+
+        previous_course_by_student = {
+            str(enrollment["SIS User ID"]): str(enrollment["course_id"])
+            for enrollment in enrollment_rows
         }
-        students.append(
+
+        grade_counts = Counter(int(enrollment["grade_level"]) for enrollment in enrollment_rows)
+        course_counts = Counter(str(enrollment["course_id"]) for enrollment in enrollment_rows)
+        school_year_records.append(
             {
-                "student_key": row["SIS User ID"],
-                "student_label": row["Student"],
-                "export_id": row["ID"],
-                "login_id": row["SIS Login ID"],
-                "email": row["Email"],
-                "grade_level": grade_level,
-                "graduation_year_suffix": GRADUATION_YEAR_BY_GRADE[grade_level],
-                "canvas_gradebook_section": row["Section"],
-                "assignment_scores": assignment_scores,
-                "assessment_profile": assessment_profiles[row["SIS User ID"]],
+                "school_year": school_year,
+                "school_year_offset": offset,
+                "beginning_assignment_label": year_assignments[0]["assignment_label"],
+                "end_assignment_label": year_assignments[1]["assignment_label"],
+                "active_student_count": len(active_students),
+                "new_freshman_count": sum(1 for student in active_students if int(student["entry_school_year_offset"]) == offset and offset > 0),
+                "graduating_senior_count": grade_counts[12],
+                "grade_counts": dict(sorted(grade_counts.items())),
+                "course_counts": dict(sorted(course_counts.items())),
+                "section_count": len(section_rows),
             }
         )
 
-    canvas_profile_artifacts = [
-        f"canvas_course_profiles/{course['course_id']}.json"
-        for course in course_rows
-        if course["current_year_eligible"]
+    rendered_students = []
+    for student in students:
+        student_key = str(student["student_key"])
+        active_years = [
+            {
+                "school_year": school_year_for_offset(offset),
+                "school_year_offset": offset,
+                "grade_level": grade_for_graduation_year(int(student["graduation_year"]), offset),
+            }
+            for offset in range(SCHOOL_YEAR_COUNT)
+            if active_in_year(student, offset)
+        ]
+        latest_history = assessment_history_by_student[student_key][-1] if assessment_history_by_student[student_key] else {}
+        rendered_students.append(
+            {
+                **student,
+                "active_years": active_years,
+                "assignment_scores": dict(sorted(assignment_scores_by_student[student_key].items())),
+                "assessment_profile": {
+                    "attendance_category": student["attendance_category"],
+                    "attendance_probability": student["attendance_probability"],
+                    "latest_academic_profile_status": latest_history.get("academic_profile_status", "not_active_in_simulation"),
+                    "latest_posterior_readiness": runtime[student_key]["observed_readiness"],
+                    "latest_latent_readiness": runtime[student_key]["latent_readiness"],
+                    "latest_present_score": runtime[student_key]["last_present_score"],
+                },
+                "assessment_history": assessment_history_by_student[student_key],
+            }
+        )
+
+    canvas_profile_artifacts = []
+    for record in school_year_records:
+        year = record["school_year"]
+        for course_id in record["course_counts"]:
+            canvas_profile_artifacts.append(f"canvas_course_profiles/{year}/{course_id}.json")
+
+    assessment_shell_artifacts = [
+        f"assessment_shells/{record['school_year']}/synthetic_asma_gradebook.csv"
+        for record in school_year_records
     ]
 
     return {
-        "schema_version": "synthetic_math_department_state_v2",
+        "schema_version": "synthetic_math_department_state_v3",
         "random_seed": SEED,
-        "school_year": SCHOOL_YEAR,
+        "base_school_year": school_year_for_offset(0),
+        "school_year_count": SCHOOL_YEAR_COUNT,
+        "active_student_count_per_year": ACTIVE_STUDENT_COUNT,
         "longitudinal_model": {
             "model_version": LONGITUDINAL_MODEL_VERSION,
-            "generated_assignments": ["Assignment 02"],
-            "implemented_transition_types": ["initialize_readiness", "school_year_growth", "absent_no_update"],
-            "planned_transition_types": ["summer_atrophy"],
+            "generated_assignments": [assignment["assignment_label"] for assignment in assignments],
+            "implemented_transition_types": ["initialize_readiness", "school_year_growth", "summer_atrophy", "absent_no_update"],
+            "implemented_latent_transition_types": ["initialize_latent_readiness", "school_year_growth", "summer_atrophy"],
             "grade_prior_shift_per_grade": GRADE_PRIOR_SHIFT_PER_GRADE,
             "readiness_prior_sd": READINESS_PRIOR_SD,
             "measurement_error_sd": MEASUREMENT_ERROR_SD,
             "growth_noise_sd": GROWTH_NOISE_SD,
             "observation_noise_sd": OBSERVATION_NOISE_SD,
         },
-        "students": sorted(students, key=lambda student: str(student["student_key"])),
-        "teachers": build_teacher_rows(),
+        "school_years": school_year_records,
+        "students": sorted(rendered_students, key=lambda row: str(row["student_key"])),
+        "teachers": teacher_rows,
         "courses": course_rows,
-        "sections": section_rows,
-        "enrollments": enrollment_rows,
+        "sections": all_sections,
+        "enrollments": all_enrollments,
+        "assessment_scores": all_assessment_scores,
         "assessment_shells": [
             {
-                "assessment_shell_id": "ASMA-ALL-MATH-2025-2026",
+                "assessment_shell_id": f"ASMA-ALL-MATH-{record['school_year']}",
                 "assessment_shell_label": "All School Math Assessment",
-                "school_year": SCHOOL_YEAR,
+                "school_year": record["school_year"],
+                "school_year_offset": record["school_year_offset"],
                 "source_system": "synthetic_canvas",
                 "join_key": "email",
-                "raw_gradebook_artifact": "synthetic_asma_gradebook.csv",
-                "student_count": len(rows),
-                "assignment_count": ASSIGNMENT_COUNT,
+                "raw_gradebook_artifact": f"assessment_shells/{record['school_year']}/synthetic_asma_gradebook.csv",
+                "student_count": record["active_student_count"],
+                "assignment_labels": [record["beginning_assignment_label"], record["end_assignment_label"]],
             }
+            for record in school_year_records
         ],
-        "assignments": build_assignment_definitions(),
+        "assignments": assignments,
         "derived_artifacts": [
+            "synthetic_school_state.json",
             "synthetic_asma_gradebook.csv",
+            "synthetic_assessment_scores_long.csv",
             "synthetic_math_courses.csv",
             "synthetic_math_sections.csv",
             "synthetic_math_enrollments.csv",
+            *assessment_shell_artifacts,
             *canvas_profile_artifacts,
         ],
     }
 
 
+def render_combined_gradebook_rows_from_state(state: dict[str, Any]) -> list[dict[str, str]]:
+    assignment_labels = [assignment["assignment_label"] for assignment in state["assignments"]]
+    return [
+        {
+            "Student": student["student_label"],
+            "ID": student["export_id"],
+            "SIS User ID": student["student_key"],
+            "SIS Login ID": student["login_id"],
+            "Email": student["email"],
+            "Section": student["canvas_gradebook_section"],
+            **{label: format_score(student["assignment_scores"].get(label)) for label in assignment_labels},
+        }
+        for student in state["students"]
+    ]
+
+
+def render_yearly_gradebook_rows_from_state(state: dict[str, Any], school_year: str) -> tuple[list[str], list[dict[str, str]]]:
+    year_record = next(record for record in state["school_years"] if record["school_year"] == school_year)
+    assignment_labels = [year_record["beginning_assignment_label"], year_record["end_assignment_label"]]
+    active_student_ids = {
+        enrollment["SIS User ID"]
+        for enrollment in state["enrollments"]
+        if enrollment["school_year"] == school_year
+    }
+    rows = []
+    for student in state["students"]:
+        if student["student_key"] not in active_student_ids:
+            continue
+        rows.append(
+            {
+                "Student": student["student_label"],
+                "ID": student["export_id"],
+                "SIS User ID": student["student_key"],
+                "SIS Login ID": student["login_id"],
+                "Email": student["email"],
+                "Section": student["canvas_gradebook_section"],
+                **{label: format_score(student["assignment_scores"].get(label)) for label in assignment_labels},
+            }
+        )
+    fieldnames = ["Student", "ID", "SIS User ID", "SIS Login ID", "Email", "Section", *assignment_labels]
+    return fieldnames, sorted(rows, key=lambda row: row["SIS User ID"])
+
+
 def render_canvas_course_profiles_from_state(state: dict[str, Any]) -> dict[str, dict[str, Any]]:
     students_by_id = {student["student_key"]: student for student in state["students"]}
-    sections_by_course: dict[str, list[dict[str, Any]]] = {}
-    for section in state["sections"]:
-        sections_by_course.setdefault(section["course_id"], []).append(section)
+    courses_by_id = {course["course_id"]: course for course in state["courses"]}
 
-    enrollments_by_section: dict[str, list[dict[str, Any]]] = {}
+    sections_by_year_course: dict[tuple[str, str], list[dict[str, Any]]] = defaultdict(list)
+    for section in state["sections"]:
+        sections_by_year_course[(section["school_year"], section["course_id"])].append(section)
+
+    enrollments_by_year_section: dict[tuple[str, str], list[dict[str, Any]]] = defaultdict(list)
     for enrollment in state["enrollments"]:
-        enrollments_by_section.setdefault(enrollment["section_id"], []).append(enrollment)
+        enrollments_by_year_section[(enrollment["school_year"], enrollment["section_id"])].append(enrollment)
 
     profiles = {}
-    for course in state["courses"]:
-        if not course["current_year_eligible"]:
-            continue
-
+    for (school_year, course_id), sections in sorted(sections_by_year_course.items()):
+        course = courses_by_id[course_id]
         course_sections = []
-        for section in sorted(sections_by_course.get(course["course_id"], []), key=lambda row: row["section_id"]):
+        for section in sorted(sections, key=lambda row: row["section_id"]):
             section_students = []
-            for enrollment in sorted(enrollments_by_section.get(section["section_id"], []), key=lambda row: row["SIS User ID"]):
+            for enrollment in sorted(enrollments_by_year_section[(school_year, section["section_id"])], key=lambda row: row["SIS User ID"]):
                 student = students_by_id[enrollment["SIS User ID"]]
                 section_students.append(
                     {
                         "Student": student["student_label"],
                         "SIS User ID": student["student_key"],
                         "Email": student["email"],
-                        "grade_level": student["grade_level"],
+                        "grade_level": enrollment["grade_level"],
                         "enrollment_status": enrollment["enrollment_status"],
                     }
                 )
@@ -725,12 +1020,12 @@ def render_canvas_course_profiles_from_state(state: dict[str, Any]) -> dict[str,
                 }
             )
 
-        profiles[f"{course['course_id']}.json"] = {
-            "canvas_course_id": f"SYN-CANVAS-{course['course_id']}-{state['school_year']}",
-            "course_id": course["course_id"],
+        profiles[f"{school_year}/{course_id}.json"] = {
+            "canvas_course_id": f"SYN-CANVAS-{course_id}-{school_year}",
+            "course_id": course_id,
             "course_name": course["course_name"],
             "track": course["track"],
-            "school_year": state["school_year"],
+            "school_year": school_year,
             "source_system": "synthetic_canvas",
             "sections": course_sections,
         }
@@ -738,63 +1033,91 @@ def render_canvas_course_profiles_from_state(state: dict[str, Any]) -> dict[str,
     return profiles
 
 
-def render_gradebook_rows_from_state(state: dict[str, Any]) -> list[dict[str, str]]:
-    assignment_labels = [assignment["assignment_label"] for assignment in state["assignments"]]
-    return [
-        {
-            "Student": student["student_label"],
-            "ID": student["export_id"],
-            "SIS User ID": student["student_key"],
-            "SIS Login ID": student["login_id"],
-            "Email": student["email"],
-            "Section": student["canvas_gradebook_section"],
-            **{label: format_score(student["assignment_scores"].get(label)) for label in assignment_labels},
-        }
-        for student in state["students"]
-    ]
-
-
-def write_csv(path: Path, fieldnames: list[str], rows: list[dict[str, str | float | int | bool]]) -> None:
+def write_csv(path: Path, fieldnames: list[str], rows: list[dict[str, Any]]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
-    with path.open("w", newline="", encoding="utf-8") as file:
-        writer = csv.DictWriter(file, fieldnames=fieldnames, lineterminator="\n")
-        writer.writeheader()
-        writer.writerows(rows)
+    temp_path: Path | None = None
+    try:
+        with tempfile.NamedTemporaryFile("w", newline="", encoding="utf-8", dir=path.parent, delete=False) as file:
+            temp_path = Path(file.name)
+            writer = csv.DictWriter(file, fieldnames=fieldnames, lineterminator="\n")
+            writer.writeheader()
+            writer.writerows(rows)
+        temp_path.replace(path)
+    finally:
+        if temp_path and temp_path.exists():
+            temp_path.unlink()
 
 
 def write_json(path: Path, payload: dict[str, Any]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
-    with path.open("w", encoding="utf-8") as file:
-        json.dump(payload, file, indent=2, sort_keys=True)
-        file.write("\n")
+    temp_path: Path | None = None
+    try:
+        with tempfile.NamedTemporaryFile("w", encoding="utf-8", dir=path.parent, delete=False) as file:
+            temp_path = Path(file.name)
+            json.dump(payload, file, indent=2, sort_keys=True)
+            file.write("\n")
+        temp_path.replace(path)
+    finally:
+        if temp_path and temp_path.exists():
+            temp_path.unlink()
 
 
 def write_canvas_course_profiles(path: Path, profiles: dict[str, dict[str, Any]]) -> None:
     path.mkdir(parents=True, exist_ok=True)
-    for old_profile in path.glob("*.json"):
-        old_profile.unlink()
-    for filename, profile in sorted(profiles.items()):
-        write_json(path / filename, profile)
+    expected_paths = set()
+    for relative_path, profile in sorted(profiles.items()):
+        output_path = path / relative_path
+        expected_paths.add(output_path)
+        write_json(output_path, profile)
+
+    for stale_path in sorted(path.rglob("*.json")):
+        if stale_path not in expected_paths:
+            stale_path.unlink()
+    prune_empty_directories(path)
+
+
+def write_yearly_assessment_shells(state: dict[str, Any]) -> None:
+    ASSESSMENT_SHELLS_DIR.mkdir(parents=True, exist_ok=True)
+    expected_paths = set()
+    for record in state["school_years"]:
+        fieldnames, rows = render_yearly_gradebook_rows_from_state(state, record["school_year"])
+        output_path = ASSESSMENT_SHELLS_DIR / record["school_year"] / "synthetic_asma_gradebook.csv"
+        expected_paths.add(output_path)
+        write_csv(output_path, fieldnames, rows)
+
+    for stale_path in sorted(ASSESSMENT_SHELLS_DIR.rglob("*.csv")):
+        if stale_path not in expected_paths:
+            stale_path.unlink()
+    prune_empty_directories(ASSESSMENT_SHELLS_DIR)
+
+
+def prune_empty_directories(path: Path) -> None:
+    for directory in sorted((candidate for candidate in path.rglob("*") if candidate.is_dir()), reverse=True):
+        try:
+            directory.rmdir()
+        except OSError:
+            pass
 
 
 def main() -> None:
-    rows, course_rows, section_rows, enrollment_rows, assessment_profiles = build_rows()
-    state = build_synthetic_math_department_state(rows, course_rows, section_rows, enrollment_rows, assessment_profiles)
-    gradebook_rows = render_gradebook_rows_from_state(state)
+    state = build_state_and_artifacts()
+    gradebook_rows = render_combined_gradebook_rows_from_state(state)
     canvas_course_profiles = render_canvas_course_profiles_from_state(state)
 
     write_json(STATE_PATH, state)
     write_canvas_course_profiles(CANVAS_COURSE_PROFILES_DIR, canvas_course_profiles)
+    write_yearly_assessment_shells(state)
     write_csv(
         GRADEBOOK_PATH,
-        ["Student", "ID", "SIS User ID", "SIS Login ID", "Email", "Section", *[f"Assignment {idx:02d}" for idx in range(1, ASSIGNMENT_COUNT + 1)]],
+        ["Student", "ID", "SIS User ID", "SIS Login ID", "Email", "Section", *[assignment_label_for_sequence(idx) for idx in range(1, ASSIGNMENT_COUNT + 1)]],
         gradebook_rows,
     )
-    write_csv(COURSES_PATH, ["course_id", "course_name", "track", "sequence_order", "current_year_eligible"], course_rows)
+    write_csv(COURSES_PATH, ["course_id", "course_name", "track", "sequence_order", "current_year_eligible"], state["courses"])
     write_csv(
         SECTIONS_PATH,
         [
             "school_year",
+            "school_year_offset",
             "section_id",
             "course_id",
             "section_label",
@@ -807,12 +1130,45 @@ def main() -> None:
             "section_growth_effect",
             "teacher_growth_effect",
         ],
-        section_rows,
+        state["sections"],
     )
     write_csv(
         ENROLLMENTS_PATH,
-        ["school_year", "Student", "SIS User ID", "grade_level", "course_id", "section_id", "teacher_id", "enrollment_status"],
-        enrollment_rows,
+        ["school_year", "school_year_offset", "Student", "SIS User ID", "grade_level", "course_id", "section_id", "teacher_id", "enrollment_status"],
+        state["enrollments"],
+    )
+    write_csv(
+        ASSESSMENT_LONG_PATH,
+        [
+            "school_year",
+            "school_year_offset",
+            "assignment_label",
+            "sequence_index",
+            "assessment_window",
+            "expected_transition_type",
+            "actual_transition_type",
+            "generation_mode",
+            "sis_user_id",
+            "student_label",
+            "grade_level",
+            "course_id",
+            "course_track",
+            "section_id",
+            "teacher_id",
+            "attendance_category",
+            "attendance_probability",
+            "present",
+            "observed_score",
+            "potential_score",
+            "posterior_readiness_after",
+            "growth_delta",
+            "latent_transition_type",
+            "latent_readiness_before",
+            "latent_readiness_after",
+            "latent_transition_delta",
+            "academic_profile_status",
+        ],
+        state["assessment_scores"],
     )
 
 

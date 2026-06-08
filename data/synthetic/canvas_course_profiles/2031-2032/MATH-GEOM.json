@@ -1,0 +1,390 @@
+{
+  "canvas_course_id": "SYN-CANVAS-MATH-GEOM-2031-2032",
+  "course_id": "MATH-GEOM",
+  "course_name": "Geometry",
+  "school_year": "2031-2032",
+  "sections": [
+    {
+      "period_label": "Period 1",
+      "section_id": "Y06-SEC-002",
+      "section_label": "Geometry - Synthetic Section 07-02",
+      "students": [
+        {
+          "Email": "privera34@schoolname.example",
+          "SIS User ID": "SYN-SIS-000575",
+          "Student": "Synthetic Student 575",
+          "enrollment_status": "active",
+          "grade_level": 10
+        },
+        {
+          "Email": "ekim34@schoolname.example",
+          "SIS User ID": "SYN-SIS-000605",
+          "Student": "Synthetic Student 605",
+          "enrollment_status": "active",
+          "grade_level": 10
+        },
+        {
+          "Email": "kstone34@schoolname.example",
+          "SIS User ID": "SYN-SIS-000611",
+          "Student": "Synthetic Student 611",
+          "enrollment_status": "active",
+          "grade_level": 10
+        },
+        {
+          "Email": "lmiller34@schoolname.example",
+          "SIS User ID": "SYN-SIS-000612",
+          "Student": "Synthetic Student 612",
+          "enrollment_status": "active",
+          "grade_level": 10
+        },
+        {
+          "Email": "sevans35@schoolname.example",
+          "SIS User ID": "SYN-SIS-000638",
+          "Student": "Synthetic Student 638",
+          "enrollment_status": "active",
+          "grade_level": 9
+        },
+        {
+          "Email": "vhayes35@schoolname.example",
+          "SIS User ID": "SYN-SIS-000660",
+          "Student": "Synthetic Student 660",
+          "enrollment_status": "active",
+          "grade_level": 9
+        },
+        {
+          "Email": "jrivera35@schoolname.example",
+          "SIS User ID": "SYN-SIS-000670",
+          "Student": "Synthetic Student 670",
+          "enrollment_status": "active",
+          "grade_level": 9
+        },
+        {
+          "Email": "hmiller35@schoolname.example",
+          "SIS User ID": "SYN-SIS-000688",
+          "Student": "Synthetic Student 688",
+          "enrollment_status": "active",
+          "grade_level": 9
+        },
+        {
+          "Email": "irivera35@schoolname.example",
+          "SIS User ID": "SYN-SIS-000689",
+          "Student": "Synthetic Student 689",
+          "enrollment_status": "active",
+          "grade_level": 9
+        },
+        {
+          "Email": "jnguyen35@schoolname.example",
+          "SIS User ID": "SYN-SIS-000690",
+          "Student": "Synthetic Student 690",
+          "enrollment_status": "active",
+          "grade_level": 9
+        },
+        {
+          "Email": "lbrooks35@schoolname.example",
+          "SIS User ID": "SYN-SIS-000692",
+          "Student": "Synthetic Student 692",
+          "enrollment_status": "active",
+          "grade_level": 9
+        },
+        {
+          "Email": "pevans35@schoolname.example",
+          "SIS User ID": "SYN-SIS-000695",
+          "Student": "Synthetic Student 695",
+          "enrollment_status": "active",
+          "grade_level": 9
+        }
+      ],
+      "teacher": {
+        "teacher_id": "TCH-002",
+        "teacher_label": "Teacher 02"
+      }
+    },
+    {
+      "period_label": "Period 2",
+      "section_id": "Y06-SEC-003",
+      "section_label": "Geometry - Synthetic Section 07-03",
+      "students": [
+        {
+          "Email": "glewis34@schoolname.example",
+          "SIS User ID": "SYN-SIS-000587",
+          "Student": "Synthetic Student 587",
+          "enrollment_status": "active",
+          "grade_level": 10
+        },
+        {
+          "Email": "kprice34@schoolname.example",
+          "SIS User ID": "SYN-SIS-000591",
+          "Student": "Synthetic Student 591",
+          "enrollment_status": "active",
+          "grade_level": 10
+        },
+        {
+          "Email": "ppatel34@schoolname.example",
+          "SIS User ID": "SYN-SIS-000615",
+          "Student": "Synthetic Student 615",
+          "enrollment_status": "active",
+          "grade_level": 10
+        },
+        {
+          "Email": "tflores35@schoolname.example",
+          "SIS User ID": "SYN-SIS-000639",
+          "Student": "Synthetic Student 639",
+          "enrollment_status": "active",
+          "grade_level": 9
+        },
+        {
+          "Email": "vgarcia35@schoolname.example",
+          "SIS User ID": "SYN-SIS-000640",
+          "Student": "Synthetic Student 640",
+          "enrollment_status": "active",
+          "grade_level": 9
+        },
+        {
+          "Email": "emartinez35@schoolname.example",
+          "SIS User ID": "SYN-SIS-000645",
+          "Student": "Synthetic Student 645",
+          "enrollment_status": "active",
+          "grade_level": 9
+        },
+        {
+          "Email": "istone35@schoolname.example",
+          "SIS User ID": "SYN-SIS-000649",
+          "Student": "Synthetic Student 649",
+          "enrollment_status": "active",
+          "grade_level": 9
+        },
+        {
+          "Email": "jmiller35@schoolname.example",
+          "SIS User ID": "SYN-SIS-000650",
+          "Student": "Synthetic Student 650",
+          "enrollment_status": "active",
+          "grade_level": 9
+        },
+        {
+          "Email": "thayes35@schoolname.example",
+          "SIS User ID": "SYN-SIS-000679",
+          "Student": "Synthetic Student 679",
+          "enrollment_status": "active",
+          "grade_level": 9
+        },
+        {
+          "Email": "eortiz35@schoolname.example",
+          "SIS User ID": "SYN-SIS-000685",
+          "Student": "Synthetic Student 685",
+          "enrollment_status": "active",
+          "grade_level": 9
+        },
+        {
+          "Email": "fprice35@schoolname.example",
+          "SIS User ID": "SYN-SIS-000686",
+          "Student": "Synthetic Student 686",
+          "enrollment_status": "active",
+          "grade_level": 9
+        },
+        {
+          "Email": "ndavis35@schoolname.example",
+          "SIS User ID": "SYN-SIS-000694",
+          "Student": "Synthetic Student 694",
+          "enrollment_status": "active",
+          "grade_level": 9
+        }
+      ],
+      "teacher": {
+        "teacher_id": "TCH-001",
+        "teacher_label": "Teacher 01"
+      }
+    },
+    {
+      "period_label": "Period 2",
+      "section_id": "Y06-SEC-004",
+      "section_label": "Geometry - Synthetic Section 07-04",
+      "students": [
+        {
+          "Email": "lstone34@schoolname.example",
+          "SIS User ID": "SYN-SIS-000592",
+          "Student": "Synthetic Student 592",
+          "enrollment_status": "active",
+          "grade_level": 10
+        },
+        {
+          "Email": "vevans34@schoolname.example",
+          "SIS User ID": "SYN-SIS-000600",
+          "Student": "Synthetic Student 600",
+          "enrollment_status": "active",
+          "grade_level": 10
+        },
+        {
+          "Email": "iortiz34@schoolname.example",
+          "SIS User ID": "SYN-SIS-000609",
+          "Student": "Synthetic Student 609",
+          "enrollment_status": "active",
+          "grade_level": 10
+        },
+        {
+          "Email": "mpatel35@schoolname.example",
+          "SIS User ID": "SYN-SIS-000653",
+          "Student": "Synthetic Student 653",
+          "enrollment_status": "active",
+          "grade_level": 9
+        },
+        {
+          "Email": "pchen35@schoolname.example",
+          "SIS User ID": "SYN-SIS-000655",
+          "Student": "Synthetic Student 655",
+          "enrollment_status": "active",
+          "grade_level": 9
+        },
+        {
+          "Email": "revans35@schoolname.example",
+          "SIS User ID": "SYN-SIS-000657",
+          "Student": "Synthetic Student 657",
+          "enrollment_status": "active",
+          "grade_level": 9
+        },
+        {
+          "Email": "clewis35@schoolname.example",
+          "SIS User ID": "SYN-SIS-000663",
+          "Student": "Synthetic Student 663",
+          "enrollment_status": "active",
+          "grade_level": 9
+        },
+        {
+          "Email": "enelson35@schoolname.example",
+          "SIS User ID": "SYN-SIS-000665",
+          "Student": "Synthetic Student 665",
+          "enrollment_status": "active",
+          "grade_level": 9
+        },
+        {
+          "Email": "gprice35@schoolname.example",
+          "SIS User ID": "SYN-SIS-000667",
+          "Student": "Synthetic Student 667",
+          "enrollment_status": "active",
+          "grade_level": 9
+        },
+        {
+          "Email": "nchen35@schoolname.example",
+          "SIS User ID": "SYN-SIS-000674",
+          "Student": "Synthetic Student 674",
+          "enrollment_status": "active",
+          "grade_level": 9
+        },
+        {
+          "Email": "kpatel35@schoolname.example",
+          "SIS User ID": "SYN-SIS-000691",
+          "Student": "Synthetic Student 691",
+          "enrollment_status": "active",
+          "grade_level": 9
+        },
+        {
+          "Email": "qflores35@schoolname.example",
+          "SIS User ID": "SYN-SIS-000696",
+          "Student": "Synthetic Student 696",
+          "enrollment_status": "active",
+          "grade_level": 9
+        }
+      ],
+      "teacher": {
+        "teacher_id": "TCH-002",
+        "teacher_label": "Teacher 02"
+      }
+    },
+    {
+      "period_label": "Period 3",
+      "section_id": "Y06-SEC-005",
+      "section_label": "Geometry - Synthetic Section 07-05",
+      "students": [
+        {
+          "Email": "gmartinez34@schoolname.example",
+          "SIS User ID": "SYN-SIS-000607",
+          "Student": "Synthetic Student 607",
+          "enrollment_status": "active",
+          "grade_level": 10
+        },
+        {
+          "Email": "ahayes34@schoolname.example",
+          "SIS User ID": "SYN-SIS-000621",
+          "Student": "Synthetic Student 621",
+          "enrollment_status": "active",
+          "grade_level": 10
+        },
+        {
+          "Email": "dkim34@schoolname.example",
+          "SIS User ID": "SYN-SIS-000624",
+          "Student": "Synthetic Student 624",
+          "enrollment_status": "active",
+          "grade_level": 10
+        },
+        {
+          "Email": "lnguyen35@schoolname.example",
+          "SIS User ID": "SYN-SIS-000652",
+          "Student": "Synthetic Student 652",
+          "enrollment_status": "active",
+          "grade_level": 9
+        },
+        {
+          "Email": "qdavis35@schoolname.example",
+          "SIS User ID": "SYN-SIS-000656",
+          "Student": "Synthetic Student 656",
+          "enrollment_status": "active",
+          "grade_level": 9
+        },
+        {
+          "Email": "dmartinez35@schoolname.example",
+          "SIS User ID": "SYN-SIS-000664",
+          "Student": "Synthetic Student 664",
+          "enrollment_status": "active",
+          "grade_level": 9
+        },
+        {
+          "Email": "fortiz35@schoolname.example",
+          "SIS User ID": "SYN-SIS-000666",
+          "Student": "Synthetic Student 666",
+          "enrollment_status": "active",
+          "grade_level": 9
+        },
+        {
+          "Email": "imiller35@schoolname.example",
+          "SIS User ID": "SYN-SIS-000669",
+          "Student": "Synthetic Student 669",
+          "enrollment_status": "active",
+          "grade_level": 9
+        },
+        {
+          "Email": "blewis35@schoolname.example",
+          "SIS User ID": "SYN-SIS-000682",
+          "Student": "Synthetic Student 682",
+          "enrollment_status": "active",
+          "grade_level": 9
+        },
+        {
+          "Email": "cmartinez35@schoolname.example",
+          "SIS User ID": "SYN-SIS-000683",
+          "Student": "Synthetic Student 683",
+          "enrollment_status": "active",
+          "grade_level": 9
+        },
+        {
+          "Email": "dnelson35@schoolname.example",
+          "SIS User ID": "SYN-SIS-000684",
+          "Student": "Synthetic Student 684",
+          "enrollment_status": "active",
+          "grade_level": 9
+        },
+        {
+          "Email": "gstone35@schoolname.example",
+          "SIS User ID": "SYN-SIS-000687",
+          "Student": "Synthetic Student 687",
+          "enrollment_status": "active",
+          "grade_level": 9
+        }
+      ],
+      "teacher": {
+        "teacher_id": "TCH-001",
+        "teacher_label": "Teacher 01"
+      }
+    }
+  ],
+  "source_system": "synthetic_canvas",
+  "track": "regular"
+}
